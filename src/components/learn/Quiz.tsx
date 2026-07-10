@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, XCircle, RefreshCw } from "lucide-react";
+import { CheckCircle2, XCircle, RefreshCw, Volume2 } from "lucide-react";
 import {
   CONSONANTS,
   VOWELS,
@@ -11,6 +11,7 @@ import {
   type Vowel,
   type Tone,
 } from "@/data/thai";
+import { speakThai, isSpeechSupported } from "@/lib/speech";
 
 type Mode = "consonants" | "vowels" | "tones";
 
@@ -19,6 +20,7 @@ interface Question {
   promptSub?: string;
   answer: string;      // Chinese answer
   options: string[];
+  speakText: string;
 }
 
 function makeQuestion(mode: Mode): Question {
@@ -36,6 +38,7 @@ function makeQuestion(mode: Mode): Question {
       promptSub: correct.name,
       answer: correct.zhMeaning,
       options,
+      speakText: correct.name,
     };
   }
   if (mode === "vowels") {
@@ -51,6 +54,7 @@ function makeQuestion(mode: Mode): Question {
       prompt: correct.form,
       answer: `${correct.zhName} (${correct.zhSound})`,
       options,
+      speakText: correct.render("อ"),
     };
   }
   const [correct] = sample(TONES, 1) as Tone[];
@@ -66,6 +70,7 @@ function makeQuestion(mode: Mode): Question {
     promptSub: correct.name,
     answer: `${correct.zhName} ${correct.arrow}`,
     options,
+    speakText: `กา${correct.symbol}`,
   };
 }
 
@@ -128,6 +133,15 @@ export function Quiz({ mode }: { mode: Mode }) {
             {q.promptSub}
           </div>
         )}
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => speakThai(q.speakText)}
+          disabled={!isSpeechSupported()}
+        >
+          <Volume2 className="mr-1 h-4 w-4" />
+          听发音 / ฟัง
+        </Button>
       </Card>
 
       <div className="grid w-full max-w-md grid-cols-1 gap-3 sm:grid-cols-2">
