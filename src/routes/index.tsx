@@ -5,7 +5,10 @@ import { Card } from "@/components/ui/card";
 import { Flashcard } from "@/components/learn/Flashcard";
 import { Quiz } from "@/components/learn/Quiz";
 import { SyllableBuilder } from "@/components/learn/SyllableBuilder";
-import { BookOpen, Brain, Blocks, Sparkles } from "lucide-react";
+import { MixedReview } from "@/components/learn/MixedReview";
+import { BookOpen, Brain, Blocks, Sparkles, Shuffle, Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/hooks/useTheme";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -45,15 +48,31 @@ const CATEGORIES: {
 
 function Index() {
   const [category, setCategory] = useState<Category>("consonants");
+  const { theme, toggle } = useTheme();
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-[image:var(--gradient-hero)] text-primary-foreground">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-8 sm:py-12">
-          <div className="flex items-center gap-2 text-sm opacity-90">
-            <Sparkles className="h-4 w-4" />
-            <span>中文母语者的泰语入门 · เรียนภาษาไทยสำหรับคนจีน</span>
+          <div className="flex items-center justify-between gap-2 text-sm opacity-90">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4" />
+              <span>中文母语者的泰语入门 · เรียนภาษาไทยสำหรับคนจีน</span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggle}
+              className="text-primary-foreground hover:bg-white/15 hover:text-primary-foreground"
+              title="切换主题 / สลับธีม"
+            >
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </Button>
           </div>
           <h1 className="text-3xl font-bold sm:text-5xl">
             学泰语 <span className="font-thai">เรียนภาษาไทย</span>
@@ -101,7 +120,7 @@ function Index() {
 
         {/* Mode tabs */}
         <Tabs defaultValue="flashcard" className="w-full">
-          <TabsList className="mx-auto grid w-full max-w-md grid-cols-3">
+          <TabsList className="mx-auto grid w-full max-w-xl grid-cols-4">
             <TabsTrigger value="flashcard">
               <BookOpen className="mr-1.5 h-4 w-4" />
               闪卡
@@ -113,6 +132,10 @@ function Index() {
             <TabsTrigger value="builder">
               <Blocks className="mr-1.5 h-4 w-4" />
               拼音节
+            </TabsTrigger>
+            <TabsTrigger value="review">
+              <Shuffle className="mr-1.5 h-4 w-4" />
+              随机复习
             </TabsTrigger>
           </TabsList>
 
@@ -133,6 +156,14 @@ function Index() {
                 hint="选择辅音 + 元音 + 声调，实时看到拼出的泰语音节。"
               >
                 <SyllableBuilder />
+              </ModeShell>
+            </TabsContent>
+            <TabsContent value="review">
+              <ModeShell
+                title="随机复习 / ทบทวนแบบสุ่ม"
+                hint="混合辅音、元音、声调随机出题，配合发音训练听辨能力。"
+              >
+                <MixedReview />
               </ModeShell>
             </TabsContent>
           </div>
