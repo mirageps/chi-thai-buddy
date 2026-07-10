@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ChevronRight, Shuffle, RotateCw } from "lucide-react";
+import { ChevronLeft, ChevronRight, Shuffle, RotateCw, Volume2 } from "lucide-react";
 import {
   CONSONANTS,
   VOWELS,
@@ -12,6 +12,7 @@ import {
   type Vowel,
   type Tone,
 } from "@/data/thai";
+import { speakThai, isSpeechSupported } from "@/lib/speech";
 
 type Mode = "consonants" | "vowels" | "tones";
 
@@ -39,6 +40,19 @@ export function Flashcard({ mode }: Props) {
   const [flipped, setFlipped] = useState(false);
 
   const current = source[order[idx]];
+
+  const speakCurrent = () => {
+    if (mode === "consonants") {
+      const c = current as Consonant;
+      speakThai(c.name);
+    } else if (mode === "vowels") {
+      const v = current as Vowel;
+      speakThai(v.render("อ"));
+    } else {
+      const t = current as Tone;
+      speakThai(`กา${t.symbol}`);
+    }
+  };
 
   const next = () => {
     setFlipped(false);
@@ -72,10 +86,22 @@ export function Flashcard({ mode }: Props) {
         <span>
           {idx + 1} / {order.length}
         </span>
-        <Button variant="ghost" size="sm" onClick={shuffle}>
-          <Shuffle className="mr-2 h-4 w-4" />
-          打乱 / สุ่ม
-        </Button>
+        <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={speakCurrent}
+            disabled={!isSpeechSupported()}
+            title="播放发音 / ฟังเสียง"
+          >
+            <Volume2 className="mr-1 h-4 w-4" />
+            听
+          </Button>
+          <Button variant="ghost" size="sm" onClick={shuffle}>
+            <Shuffle className="mr-2 h-4 w-4" />
+            打乱 / สุ่ม
+          </Button>
+        </div>
       </div>
 
       <Card
