@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Volume2 } from "lucide-react";
 import { CONSONANTS, VOWELS, TONES, classLabel } from "@/data/thai";
+import { speakThai, isSpeechSupported } from "@/lib/speech";
 
 export function SyllableBuilder() {
   const [cIdx, setCIdx] = useState(0); // ก
@@ -38,6 +40,15 @@ export function SyllableBuilder() {
         <div className="font-thai text-8xl font-bold drop-shadow-lg">
           {syllable}
         </div>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => speakThai(syllable)}
+          disabled={!isSpeechSupported()}
+        >
+          <Volume2 className="mr-1 h-4 w-4" />
+          播放发音 / ฟังเสียง
+        </Button>
         <div className="flex flex-wrap justify-center gap-2 text-xs">
           <Badge variant="secondary" className="font-thai">
             {consonant.char} · {consonant.zhSound}
