@@ -77,14 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "学泰语 · 泰语辅音元音声调学习" },
+      { name: "description", content: "专为中文使用者设计的泰语入门工具：44 个辅音、元音、5 个声调，闪卡 + 测验 + 拼音节练习。" },
+      { name: "author", content: "学泰语" },
+      { property: "og:title", content: "学泰语 · 中文使用者的泰语入门" },
+      { property: "og:description", content: "辅音、元音、声调三合一：闪卡、随机测验、拼音节练习。" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
