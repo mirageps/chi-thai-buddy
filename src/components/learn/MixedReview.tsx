@@ -12,9 +12,10 @@ import {
   type Vowel,
   type Tone,
 } from "@/data/thai";
+import { FINALS } from "@/data/finals";
 import { speakThai, isSpeechSupported } from "@/lib/speech";
 
-type Kind = "consonant" | "vowel" | "tone";
+type Kind = "consonant" | "vowel" | "final" | "tone";
 
 interface MixedQ {
   kind: Kind;
@@ -28,8 +29,9 @@ interface MixedQ {
 
 function pickKind(): Kind {
   const r = Math.random();
-  if (r < 0.34) return "consonant";
-  if (r < 0.67) return "vowel";
+  if (r < 0.25) return "consonant";
+  if (r < 0.5) return "vowel";
+  if (r < 0.75) return "final";
   return "tone";
 }
 
@@ -72,6 +74,26 @@ function makeMixed(): MixedQ {
       accentVar: "--vowel",
     };
   }
+  if (kind === "final") {
+    const [f] = sample(FINALS, 1);
+    const ex = f.examples[Math.floor(Math.random() * f.examples.length)];
+    const wrong = sample(
+      FINALS.filter((x) => x.key !== f.key),
+      3,
+    );
+    const options = [f, ...wrong]
+      .map((x) => `${x.zhName} · ${x.thName}`)
+      .sort(() => Math.random() - 0.5);
+    return {
+      kind,
+      prompt: ex.thai,
+      promptSub: ex.zh,
+      speakText: ex.thai,
+      answer: `${f.zhName} · ${f.thName}`,
+      options,
+      accentVar: "--final",
+    };
+  }
   const [t] = sample(TONES, 1) as Tone[];
   const wrong = sample(
     TONES.filter((x) => x.zhName !== t.zhName),
@@ -94,6 +116,7 @@ function makeMixed(): MixedQ {
 const KIND_LABEL: Record<Kind, string> = {
   consonant: "辅音 / พยัญชนะ",
   vowel: "元音 / สระ",
+  final: "韵尾 / ตัวสะกด",
   tone: "声调 / วรรณยุกต์",
 };
 
