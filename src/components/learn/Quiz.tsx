@@ -150,9 +150,9 @@ export function Quiz({ mode }: { mode: Mode }) {
         <p className="text-xs uppercase tracking-wider text-muted-foreground">
           这是什么？ / นี่คืออะไร？
         </p>
-        <div className={`font-thai text-8xl font-bold ${accent}`}>{q.prompt}</div>
+        <div className={`font-thai text-8xl font-bold leading-[1.4] py-2 ${accent}`}>{q.prompt}</div>
         {q.promptSub && (
-          <div className="font-thai text-lg text-muted-foreground">
+          <div className="font-thai text-lg leading-[1.5] text-muted-foreground">
             {q.promptSub}
           </div>
         )}
