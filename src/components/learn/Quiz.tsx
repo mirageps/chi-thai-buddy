@@ -11,9 +11,10 @@ import {
   type Vowel,
   type Tone,
 } from "@/data/thai";
+import { FINALS } from "@/data/finals";
 import { speakThai, isSpeechSupported } from "@/lib/speech";
 
-type Mode = "consonants" | "vowels" | "tones";
+type Mode = "consonants" | "vowels" | "finals" | "tones";
 
 interface Question {
   prompt: string;      // Thai symbol
@@ -57,6 +58,26 @@ function makeQuestion(mode: Mode): Question {
       speakText: correct.render("อ"),
     };
   }
+  if (mode === "finals") {
+    // Pick a random example from a random group; ask which group it belongs to.
+    const [correct] = sample(FINALS, 1);
+    const example =
+      correct.examples[Math.floor(Math.random() * correct.examples.length)];
+    const wrong = sample(
+      FINALS.filter((f) => f.key !== correct.key),
+      3,
+    );
+    const options = [correct, ...wrong]
+      .map((f) => `${f.zhName} · ${f.thName}`)
+      .sort(() => Math.random() - 0.5);
+    return {
+      prompt: example.thai,
+      promptSub: example.zh,
+      answer: `${correct.zhName} · ${correct.thName}`,
+      options,
+      speakText: example.thai,
+    };
+  }
   const [correct] = sample(TONES, 1) as Tone[];
   const wrong = sample(
     TONES.filter((t) => t.zhName !== correct.zhName),
@@ -93,7 +114,9 @@ export function Quiz({ mode }: { mode: Mode }) {
         ? "text-[color:var(--consonant)]"
         : mode === "vowels"
           ? "text-[color:var(--vowel)]"
-          : "text-[color:var(--tone)]",
+          : mode === "finals"
+            ? "text-[color:var(--final)]"
+            : "text-[color:var(--tone)]",
     [mode],
   );
 
