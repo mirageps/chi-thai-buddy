@@ -62,7 +62,7 @@ export function SyllableBuilder() {
         <p className="text-xs uppercase tracking-widest opacity-80">
           你的音节 / พยางค์ของคุณ
         </p>
-        <div className="font-thai text-8xl font-bold drop-shadow-lg">
+        <div className="font-thai text-8xl font-bold leading-[1.4] drop-shadow-lg py-4">
           {syllable}
         </div>
         <Button

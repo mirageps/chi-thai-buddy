@@ -193,13 +193,13 @@ export function MixedReview() {
           听并选择 / ฟังแล้วเลือก
         </p>
         <div
-          className="font-thai text-8xl font-bold"
+          className="font-thai text-8xl font-bold leading-[1.4] py-2"
           style={{ color: `var(${q.accentVar})` }}
         >
           {q.prompt}
         </div>
         {q.promptSub && (
-          <div className="font-thai text-lg text-muted-foreground">
+          <div className="font-thai text-lg leading-[1.5] text-muted-foreground">
             {q.promptSub}
           </div>
         )}
