@@ -114,7 +114,7 @@ export function Flashcard({ mode }: Props) {
 
       <Card
         onClick={() => setFlipped((f) => !f)}
-        className={`relative flex h-80 w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden bg-gradient-to-br ${accent} to-card shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.02]`}
+        className={`relative flex min-h-[22rem] w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden bg-gradient-to-br ${accent} to-card px-6 py-10 shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.02]`}
       >
         <div className="absolute right-3 top-3 text-xs text-white/70">
           <RotateCw className="h-4 w-4" />
@@ -156,8 +156,8 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   if (mode === "consonants") {
     const c = item as Consonant;
     return (
-      <div className="flex flex-col items-center gap-3 text-white">
-        <span className="font-thai text-9xl font-bold drop-shadow-lg">{c.char}</span>
+      <div className="flex flex-col items-center gap-6 text-white">
+        <span className="font-thai text-9xl font-bold leading-[1.4] drop-shadow-lg">{c.char}</span>
         <span className={`rounded-full px-3 py-1 text-xs ${classColor(c.cls)}`}>
           {classLabel(c.cls).zh}
         </span>
@@ -167,8 +167,8 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   if (mode === "vowels") {
     const v = item as Vowel;
     return (
-      <div className="flex flex-col items-center gap-3 text-white">
-        <span className="font-thai text-8xl font-bold drop-shadow-lg">{v.form}</span>
+      <div className="flex flex-col items-center gap-6 text-white">
+        <span className="font-thai text-8xl font-bold leading-[1.4] drop-shadow-lg">{v.form}</span>
         <span className="text-sm opacity-80">点击查看发音</span>
       </div>
     );
@@ -176,8 +176,8 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   if (mode === "finals") {
     const f = item as FinalGroup;
     return (
-      <div className="flex flex-col items-center gap-3 px-6 text-center text-white">
-        <span className="font-thai text-6xl font-bold drop-shadow-lg">
+      <div className="flex flex-col items-center gap-6 px-6 text-center text-white">
+        <span className="font-thai text-6xl font-bold leading-[1.4] drop-shadow-lg">
           {f.thName}
         </span>
         <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
@@ -189,8 +189,8 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   }
   const t = item as Tone;
   return (
-    <div className="flex flex-col items-center gap-3 text-white">
-      <span className="font-thai text-8xl font-bold drop-shadow-lg">
+    <div className="flex flex-col items-center gap-6 text-white">
+      <span className="font-thai text-8xl font-bold leading-[1.4] drop-shadow-lg">
         ก{t.symbol}
       </span>
       <span className="text-4xl">{t.arrow}</span>
@@ -203,7 +203,7 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
     const c = item as Consonant;
     return (
       <div className="flex flex-col items-center gap-2 px-6 text-center text-white">
-        <div className="font-thai text-4xl">{c.name}</div>
+        <div className="font-thai text-4xl leading-[1.5]">{c.name}</div>
         <div className="text-sm italic opacity-80">{c.romanized}</div>
         <div className="mt-2 text-2xl font-semibold">{c.zhMeaning}</div>
         <div className="text-sm opacity-90">发音：{c.zhSound}</div>
@@ -218,7 +218,7 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
     return (
       <div className="flex flex-col items-center gap-2 text-center text-white">
         <div className="text-3xl font-bold">{v.zhName}</div>
-        <div className="font-thai text-2xl opacity-90">示例：{v.render("ก")}</div>
+        <div className="font-thai text-2xl leading-[1.5] opacity-90">示例：{v.render("ก")}</div>
         <div className="text-lg">发音：{v.zhSound}</div>
         <div className="text-xs opacity-80">
           {v.length === "short" ? "短元音 สระเสียงสั้น" : "长元音 สระเสียงยาว"}
@@ -231,10 +231,10 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
     return (
       <div className="flex flex-col items-center gap-2 px-6 text-center text-white">
         <div className="text-2xl font-bold">{f.zhName}</div>
-        <div className="font-thai text-xl opacity-90">{f.thName}</div>
+        <div className="font-thai text-xl leading-[1.5] opacity-90">{f.thName}</div>
         <div className="text-sm opacity-90">{f.desc}</div>
         {f.consonants.length > 0 && (
-          <div className="font-thai text-lg">
+          <div className="font-thai text-lg leading-[1.5]">
             辅音：{f.consonants.join(" ")}
           </div>
         )}
@@ -255,7 +255,7 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
   return (
     <div className="flex flex-col items-center gap-2 text-center text-white">
       <div className="text-3xl font-bold">{t.zhName}</div>
-      <div className="font-thai text-xl opacity-90">{t.name}</div>
+      <div className="font-thai text-xl leading-[1.5] opacity-90">{t.name}</div>
       <div className="max-w-xs text-sm">{t.zhDesc}</div>
       <div className="mt-2 text-4xl">{t.arrow}</div>
     </div>
