@@ -68,6 +68,8 @@
   --color-class-mid: var(--class-mid);
   --color-class-high: var(--class-high);
   --color-class-low: var(--class-low);
+  --color-final: var(--final);
+  --color-final-foreground: var(--final-foreground);
   --font-thai: "Sarabun", "Noto Sans Thai", "Leelawadee UI", "Tahoma", system-ui, sans-serif;
   --font-cn: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
 }
@@ -100,6 +102,8 @@
   --vowel-foreground: oklch(0.985 0.012 85);
   --tone: oklch(0.55 0.16 280);
   --tone-foreground: oklch(0.985 0.012 85);
+  --final: oklch(0.63 0.16 60);
+  --final-foreground: oklch(0.985 0.012 85);
   --class-mid: oklch(0.6 0.14 240);
   --class-high: oklch(0.62 0.18 15);
   --class-low: oklch(0.6 0.15 150);
@@ -139,6 +143,21 @@
   --accent-foreground: oklch(0.984 0.003 247.858);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
+  --consonant: oklch(0.7 0.15 25);
+  --consonant-foreground: oklch(0.129 0.042 264.695);
+  --vowel: oklch(0.72 0.14 145);
+  --vowel-foreground: oklch(0.129 0.042 264.695);
+  --tone: oklch(0.72 0.15 280);
+  --tone-foreground: oklch(0.129 0.042 264.695);
+  --final: oklch(0.75 0.16 65);
+  --final-foreground: oklch(0.129 0.042 264.695);
+  --class-mid: oklch(0.7 0.15 240);
+  --class-high: oklch(0.72 0.18 15);
+  --class-low: oklch(0.72 0.15 150);
+  --gradient-hero: linear-gradient(135deg, oklch(0.35 0.09 195) 0%, oklch(0.4 0.13 280) 100%);
+  --gradient-warm: linear-gradient(135deg, oklch(0.55 0.16 65) 0%, oklch(0.5 0.18 15) 100%);
+  --shadow-soft: 0 4px 20px -6px oklch(0 0 0 / 0.5);
+  --shadow-card: 0 2px 10px -2px oklch(0 0 0 / 0.35);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.551 0.027 264.364);

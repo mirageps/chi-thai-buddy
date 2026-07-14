@@ -12,9 +12,10 @@ import {
   type Vowel,
   type Tone,
 } from "@/data/thai";
+import { FINALS, type FinalGroup } from "@/data/finals";
 import { speakThai, isSpeechSupported } from "@/lib/speech";
 
-type Mode = "consonants" | "vowels" | "tones";
+type Mode = "consonants" | "vowels" | "finals" | "tones";
 
 interface Props {
   mode: Mode;
@@ -30,6 +31,7 @@ export function Flashcard({ mode }: Props) {
   const source = useMemo(() => {
     if (mode === "consonants") return CONSONANTS;
     if (mode === "vowels") return VOWELS;
+    if (mode === "finals") return FINALS;
     return TONES;
   }, [mode]);
 
@@ -48,6 +50,10 @@ export function Flashcard({ mode }: Props) {
     } else if (mode === "vowels") {
       const v = current as Vowel;
       speakThai(v.render("อ"));
+    } else if (mode === "finals") {
+      const f = current as FinalGroup;
+      const ex = f.examples[0]?.thai;
+      if (ex) speakThai(ex);
     } else {
       const t = current as Tone;
       speakThai(`กา${t.symbol}`);
@@ -78,7 +84,9 @@ export function Flashcard({ mode }: Props) {
       ? "from-[color:var(--consonant)]"
       : mode === "vowels"
         ? "from-[color:var(--vowel)]"
-        : "from-[color:var(--tone)]";
+        : mode === "finals"
+          ? "from-[color:var(--final)]"
+          : "from-[color:var(--tone)]";
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -144,7 +152,7 @@ export function Flashcard({ mode }: Props) {
   );
 }
 
-function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone }) {
+function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone | FinalGroup }) {
   if (mode === "consonants") {
     const c = item as Consonant;
     return (
@@ -165,6 +173,20 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
       </div>
     );
   }
+  if (mode === "finals") {
+    const f = item as FinalGroup;
+    return (
+      <div className="flex flex-col items-center gap-3 px-6 text-center text-white">
+        <span className="font-thai text-6xl font-bold drop-shadow-lg">
+          {f.thName}
+        </span>
+        <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
+          {f.zhName}
+          {f.ipa ? ` · ${f.ipa}` : ""}
+        </span>
+      </div>
+    );
+  }
   const t = item as Tone;
   return (
     <div className="flex flex-col items-center gap-3 text-white">
@@ -176,7 +198,7 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   );
 }
 
-function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone }) {
+function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone | FinalGroup }) {
   if (mode === "consonants") {
     const c = item as Consonant;
     return (
@@ -200,6 +222,31 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone }
         <div className="text-lg">发音：{v.zhSound}</div>
         <div className="text-xs opacity-80">
           {v.length === "short" ? "短元音 สระเสียงสั้น" : "长元音 สระเสียงยาว"}
+        </div>
+      </div>
+    );
+  }
+  if (mode === "finals") {
+    const f = item as FinalGroup;
+    return (
+      <div className="flex flex-col items-center gap-2 px-6 text-center text-white">
+        <div className="text-2xl font-bold">{f.zhName}</div>
+        <div className="font-thai text-xl opacity-90">{f.thName}</div>
+        <div className="text-sm opacity-90">{f.desc}</div>
+        {f.consonants.length > 0 && (
+          <div className="font-thai text-lg">
+            辅音：{f.consonants.join(" ")}
+          </div>
+        )}
+        <div className="mt-1 flex flex-wrap justify-center gap-1 text-xs">
+          {f.examples.map((ex) => (
+            <span
+              key={ex.thai}
+              className="rounded-full bg-white/20 px-2 py-0.5"
+            >
+              <span className="font-thai">{ex.thai}</span> · {ex.zh}
+            </span>
+          ))}
         </div>
       </div>
     );

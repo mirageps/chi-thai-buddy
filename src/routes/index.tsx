@@ -14,7 +14,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Category = "consonants" | "vowels" | "tones";
+type Category = "consonants" | "vowels" | "finals" | "tones";
 
 const CATEGORIES: {
   key: Category;
@@ -36,6 +36,13 @@ const CATEGORIES: {
     zh: "元音",
     desc: "短元音与长元音、复合元音，附中文近似发音提示。",
     colorVar: "--vowel",
+  },
+  {
+    key: "finals",
+    th: "ตัวสะกด",
+    zh: "韵尾辅音",
+    desc: "学习泰语的 8 个韵尾音，了解不同辅音位于音节末尾时的实际发音。",
+    colorVar: "--final",
   },
   {
     key: "tones",
@@ -85,7 +92,7 @@ function Index() {
 
       <main className="mx-auto max-w-5xl px-4 py-8">
         {/* Category selector */}
-        <div className="mb-8 grid gap-3 sm:grid-cols-3">
+        <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {CATEGORIES.map((cat) => {
             const active = cat.key === category;
             return (
