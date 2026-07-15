@@ -13,7 +13,8 @@ import {
   type Tone,
 } from "@/data/thai";
 import { FINALS, type FinalGroup } from "@/data/finals";
-import { speakThai, isSpeechSupported } from "@/lib/speech";
+import { speakThai } from "@/lib/speech";
+import { useSpeechSupported } from "@/hooks/useSpeechSupported";
 
 type Mode = "consonants" | "vowels" | "finals" | "tones";
 
@@ -99,7 +100,7 @@ export function Flashcard({ mode }: Props) {
             variant="ghost"
             size="sm"
             onClick={speakCurrent}
-            disabled={!isSpeechSupported()}
+            disabled={!useSpeechSupported()}
             title="播放发音 / ฟังเสียง"
           >
             <Volume2 className="mr-1 h-4 w-4" />
