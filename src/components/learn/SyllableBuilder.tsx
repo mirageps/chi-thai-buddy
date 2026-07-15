@@ -13,7 +13,8 @@ import {
   lookupVocab,
   type FinalKey,
 } from "@/data/finals";
-import { speakThai, isSpeechSupported } from "@/lib/speech";
+import { speakThai } from "@/lib/speech";
+import { useSpeechSupported } from "@/hooks/useSpeechSupported";
 
 export function SyllableBuilder() {
   const [cIdx, setCIdx] = useState(0); // ก
@@ -69,7 +70,7 @@ export function SyllableBuilder() {
           size="sm"
           variant="secondary"
           onClick={() => speakThai(syllable)}
-          disabled={!isSpeechSupported()}
+          disabled={!useSpeechSupported()}
         >
           <Volume2 className="mr-1 h-4 w-4" />
           播放发音 / ฟังเสียง
@@ -170,20 +171,21 @@ export function SyllableBuilder() {
           }
         />
         <DetailRow zh="罗马拼音" th="คำอ่าน" value={romanized} />
-        <DetailRow
+        <ExpandableDetailRow
+          key={syllable}
           zh="中文意思"
           th="ความหมาย"
           value={
             meaning ? (
               <span className="font-semibold text-foreground">{meaning}</span>
             ) : (
-              <span className="text-xs text-muted-foreground">
+              <div className="text-xs text-muted-foreground">
                 可以发音，但不是常用或具有明确含义的泰语词。
                 <br />
                 <span className="font-thai">
                   สามารถออกเสียงได้ แต่ไม่ใช่คำศัพท์ที่ใช้ทั่วไป
                 </span>
-              </span>
+              </div>
             )
           }
         />
@@ -268,6 +270,55 @@ function DetailRow({
         <div className="font-thai text-xs text-muted-foreground">{th}</div>
       </div>
       <div className="text-right text-sm">{value}</div>
+    </div>
+  );
+}
+
+function ExpandableDetailRow({
+  zh,
+  th,
+  value,
+}: {
+  zh: string;
+  th: string;
+  value: React.ReactNode;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div className="flex items-start justify-between gap-3 border-b border-border/50 pb-2 last:border-0">
+      <div className="min-w-0 flex-1">
+        <div className="text-xs font-medium">{zh}</div>
+        <div className="font-thai text-xs text-muted-foreground">{th}</div>
+      </div>
+      <div className="text-right text-sm">
+        <div
+          className={`leading-[1.4] transition-all duration-300 ${
+            expanded ? "" : "overflow-hidden"
+          }`}
+          style={
+            expanded
+              ? undefined
+              : {
+                  display: "-webkit-box",
+                  WebkitBoxOrient: "vertical",
+                  WebkitLineClamp: 2,
+                }
+          }
+        >
+          {value}
+        </div>
+        <button
+          type="button"
+          onClick={() => setExpanded((e) => !e)}
+          className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <span>{expanded ? "收起 ↑" : "展开 ↓"}</span>
+          <span className="opacity-60">/</span>
+          <span className="font-thai">
+            {expanded ? "ย่อข้อความ" : "ดูเพิ่มเติม"}
+          </span>
+        </button>
+      </div>
     </div>
   );
 }

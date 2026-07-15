@@ -12,7 +12,8 @@ import {
   type Tone,
 } from "@/data/thai";
 import { FINALS } from "@/data/finals";
-import { speakThai, isSpeechSupported } from "@/lib/speech";
+import { speakThai } from "@/lib/speech";
+import { useSpeechSupported } from "@/hooks/useSpeechSupported";
 
 type Mode = "consonants" | "vowels" | "finals" | "tones";
 
@@ -160,7 +161,7 @@ export function Quiz({ mode }: { mode: Mode }) {
           size="sm"
           variant="secondary"
           onClick={() => speakThai(q.speakText)}
-          disabled={!isSpeechSupported()}
+          disabled={!useSpeechSupported()}
         >
           <Volume2 className="mr-1 h-4 w-4" />
           听发音 / ฟัง

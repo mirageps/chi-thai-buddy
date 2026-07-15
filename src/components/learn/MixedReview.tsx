@@ -14,6 +14,7 @@ import {
 } from "@/data/thai";
 import { FINALS } from "@/data/finals";
 import { speakThai, isSpeechSupported } from "@/lib/speech";
+import { useSpeechSupported } from "@/hooks/useSpeechSupported";
 
 type Kind = "consonant" | "vowel" | "final" | "tone";
 
@@ -126,6 +127,7 @@ export function MixedReview() {
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
   const [streak, setStreak] = useState(0);
+  const speechSupported = useSpeechSupported();
 
   const nextQ = useCallback(() => {
     setQ(makeMixed());
@@ -207,7 +209,7 @@ export function MixedReview() {
           size="sm"
           variant="secondary"
           onClick={() => speakThai(q.speakText)}
-          disabled={!isSpeechSupported()}
+          disabled={!speechSupported}
         >
           <Volume2 className="mr-1 h-4 w-4" />
           再听一次 / ฟังอีกครั้ง
@@ -248,7 +250,7 @@ export function MixedReview() {
         </Button>
       )}
 
-      {!isSpeechSupported() && (
+      {!speechSupported && (
         <p className="text-center text-xs text-muted-foreground">
           您的浏览器不支持语音功能 · เบราว์เซอร์ของคุณไม่รองรับเสียง
         </p>
