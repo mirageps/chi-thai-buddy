@@ -404,39 +404,97 @@ function FinalSelector({
   selected,
   onSelect,
 }: {
-  selected: FinalKey;
-  onSelect: (k: FinalKey) => void;
+  selected: string | null;
+  onSelect: (c: string | null) => void;
 }) {
-  const items: { key: FinalKey; label: string; sub: string }[] = [
-    { key: "none", label: "—", sub: "无韵尾" },
-    ...PRIMARY_FINAL_CONSONANTS.map((f) => ({
-      key: f.key,
-      label: f.char,
-      sub: f.label,
-    })),
-  ];
+  const primaryChars = new Set(PRIMARY_FINAL_CONSONANTS.map((p) => p.char));
+  const groups = FINALS.filter((g) => g.key !== "none");
   return (
-    <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-      {items.map((it) => {
-        const active = it.key === selected;
-        return (
-          <button
-            key={it.key}
-            onClick={() => onSelect(it.key)}
-            className={`font-thai flex flex-col items-center rounded-md border p-2 text-lg transition-colors ${
-              active
-                ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
-                : "hover:bg-muted"
-            }`}
-            title={it.sub}
-          >
-            <span>{it.label}</span>
-            <span className="font-cn mt-1 text-[10px] leading-tight text-muted-foreground">
-              {it.sub}
+    <div className="flex flex-col gap-3">
+      {/* None option */}
+      <button
+        type="button"
+        onClick={() => onSelect(null)}
+        className={`font-thai flex items-center justify-between rounded-md border p-3 text-left transition-colors ${
+          selected === null
+            ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
+            : "hover:bg-muted"
+        }`}
+        title="ไม่มีตัวสะกด / 无韵尾"
+      >
+        <span className="flex items-baseline gap-2">
+          <span className="text-2xl">—</span>
+          <span className="font-cn text-xs text-muted-foreground">
+            แม่ ก กา / 无韵尾
+          </span>
+        </span>
+        <span className="font-cn text-[10px] text-muted-foreground">
+          ไม่มีตัวสะกด
+        </span>
+      </button>
+
+      <p className="font-cn text-[11px] leading-snug text-muted-foreground">
+        按泰语韵尾类别选择音节末尾的辅音。不同字母在词尾可能有相同的发音。
+        <br />
+        <span className="font-thai">
+          เลือกพยัญชนะท้ายพยางค์ตามมาตราตัวสะกด พยัญชนะที่เขียนต่างกันอาจออกเสียงท้ายเหมือนกัน
+        </span>
+      </p>
+
+      {groups.map((g) => (
+        <div
+          key={g.key}
+          className="rounded-md border border-border/60 p-2"
+        >
+          <div className="mb-2 flex flex-wrap items-baseline justify-between gap-1 px-1">
+            <span className="font-thai text-sm font-semibold">
+              {g.thName}{" "}
+              <span className="font-cn text-xs font-normal text-muted-foreground">
+                / {g.zhName}
+              </span>
             </span>
-          </button>
-        );
-      })}
+            <span className="font-cn text-[10px] text-muted-foreground">
+              {g.short} {g.ipa ?? ""}
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
+            {g.consonants.map((c) => {
+              const active = selected === c;
+              const isPrimary = primaryChars.has(c);
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSelect(c);
+                  }}
+                  className={`font-thai relative flex items-center justify-center rounded-md border p-2 text-lg transition-colors ${
+                    active
+                      ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
+                      : "hover:bg-muted"
+                  }`}
+                  title={
+                    isPrimary
+                      ? `${c} · ${g.thName} · ${g.short} — 同组代表字 / ตัวสะกดตรงมาตรา`
+                      : `${c} · ${g.thName} · ${g.short}`
+                  }
+                >
+                  <span>{c}</span>
+                  {isPrimary && (
+                    <span
+                      aria-hidden
+                      className="absolute right-1 top-0.5 text-[9px] text-muted-foreground"
+                    >
+                      ·
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
