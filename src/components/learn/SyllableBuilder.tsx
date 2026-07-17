@@ -122,7 +122,8 @@ export function SyllableBuilder() {
               <span className="font-thai">
                 {finalChar}{" "}
                 <span className="text-muted-foreground">
-                  ({finalGroup?.short})
+                  ({finalGroup?.short}
+                  {finalGroup?.ipa ? ` · ${finalGroup.ipa}` : ""})
                 </span>
               </span>
             ) : (
@@ -175,10 +176,10 @@ export function SyllableBuilder() {
               <span className="font-semibold text-foreground">{meaning}</span>
             ) : (
               <div className="text-xs text-muted-foreground">
-                可以发音，但不是常用或具有明确含义的泰语词。
+                未收录为常用泰语词，请勿将其作为正式词汇记忆。
                 <br />
                 <span className="font-thai">
-                  สามารถออกเสียงได้ แต่ไม่ใช่คำศัพท์ที่ใช้ทั่วไป
+                  ยังไม่พบว่าเป็นคำไทยที่ใช้ทั่วไป
                 </span>
               </div>
             )
