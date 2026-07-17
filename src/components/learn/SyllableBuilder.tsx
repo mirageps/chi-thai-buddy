@@ -231,7 +231,7 @@ export function SyllableBuilder() {
           colorVar="--final"
           defaultOpen
         >
-          <FinalSelector selected={fKey} onSelect={setFKey} />
+          <FinalSelector selected={finalChar} onSelect={setFinalChar} />
         </CollapsibleSelector>
         <CollapsibleSelector title="④ 声调 / วรรณยุกต์" colorVar="--tone" defaultOpen>
           <SelectorGrid
