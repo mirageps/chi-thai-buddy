@@ -11,7 +11,6 @@ import {
   finalGroupOf,
   liveOrDead,
   lookupVocab,
-  type FinalKey,
 } from "@/data/finals";
 import { speakThai } from "@/lib/speech";
 import { useSpeechSupported } from "@/hooks/useSpeechSupported";
@@ -19,18 +18,14 @@ import { useSpeechSupported } from "@/hooks/useSpeechSupported";
 export function SyllableBuilder() {
   const [cIdx, setCIdx] = useState(0); // ก
   const [vIdx, setVIdx] = useState(1); // า
-  const [fKey, setFKey] = useState<FinalKey>("none");
+  const [finalChar, setFinalChar] = useState<string | null>(null);
   const [tIdx, setTIdx] = useState(0); // no tone
 
   const consonant = CONSONANTS[cIdx];
   const vowel = VOWELS[vIdx];
   const tone = TONES[tIdx];
-  const finalEntry =
-    fKey === "none"
-      ? null
-      : PRIMARY_FINAL_CONSONANTS.find((f) => f.key === fKey) ?? null;
-  const finalChar = finalEntry?.char ?? "";
   const finalGroup = finalChar ? finalGroupOf(finalChar) : FINALS[0];
+  const finalKey = finalGroup?.key ?? "none";
 
   const syllable = useMemo(() => {
     // 1) vowel + initial consonant
@@ -51,7 +46,7 @@ export function SyllableBuilder() {
   }, [consonant, vowel, tone, finalChar]);
 
   const meaning = lookupVocab(syllable);
-  const liveDead = liveOrDead(fKey, vowel.length);
+  const liveDead = liveOrDead(finalKey, vowel.length);
   const romanized = `${consonant.initialSound}${vowel.romanized}${
     finalGroup?.short && finalGroup.short !== "—" ? finalGroup.short.replace("-", "") : ""
   }`;
@@ -127,7 +122,8 @@ export function SyllableBuilder() {
               <span className="font-thai">
                 {finalChar}{" "}
                 <span className="text-muted-foreground">
-                  ({finalGroup?.short})
+                  ({finalGroup?.short}
+                  {finalGroup?.ipa ? ` · ${finalGroup.ipa}` : ""})
                 </span>
               </span>
             ) : (
@@ -180,10 +176,10 @@ export function SyllableBuilder() {
               <span className="font-semibold text-foreground">{meaning}</span>
             ) : (
               <div className="text-xs text-muted-foreground">
-                可以发音，但不是常用或具有明确含义的泰语词。
+                未收录为常用泰语词，请勿将其作为正式词汇记忆。
                 <br />
                 <span className="font-thai">
-                  สามารถออกเสียงได้ แต่ไม่ใช่คำศัพท์ที่ใช้ทั่วไป
+                  ยังไม่พบว่าเป็นคำไทยที่ใช้ทั่วไป
                 </span>
               </div>
             )
@@ -236,7 +232,7 @@ export function SyllableBuilder() {
           colorVar="--final"
           defaultOpen
         >
-          <FinalSelector selected={fKey} onSelect={setFKey} />
+          <FinalSelector selected={finalChar} onSelect={setFinalChar} />
         </CollapsibleSelector>
         <CollapsibleSelector title="④ 声调 / วรรณยุกต์" colorVar="--tone" defaultOpen>
           <SelectorGrid
@@ -409,39 +405,97 @@ function FinalSelector({
   selected,
   onSelect,
 }: {
-  selected: FinalKey;
-  onSelect: (k: FinalKey) => void;
+  selected: string | null;
+  onSelect: (c: string | null) => void;
 }) {
-  const items: { key: FinalKey; label: string; sub: string }[] = [
-    { key: "none", label: "—", sub: "无韵尾" },
-    ...PRIMARY_FINAL_CONSONANTS.map((f) => ({
-      key: f.key,
-      label: f.char,
-      sub: f.label,
-    })),
-  ];
+  const primaryChars = new Set(PRIMARY_FINAL_CONSONANTS.map((p) => p.char));
+  const groups = FINALS.filter((g) => g.key !== "none");
   return (
-    <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-      {items.map((it) => {
-        const active = it.key === selected;
-        return (
-          <button
-            key={it.key}
-            onClick={() => onSelect(it.key)}
-            className={`font-thai flex flex-col items-center rounded-md border p-2 text-lg transition-colors ${
-              active
-                ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
-                : "hover:bg-muted"
-            }`}
-            title={it.sub}
-          >
-            <span>{it.label}</span>
-            <span className="font-cn mt-1 text-[10px] leading-tight text-muted-foreground">
-              {it.sub}
+    <div className="flex flex-col gap-3">
+      {/* None option */}
+      <button
+        type="button"
+        onClick={() => onSelect(null)}
+        className={`font-thai flex items-center justify-between rounded-md border p-3 text-left transition-colors ${
+          selected === null
+            ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
+            : "hover:bg-muted"
+        }`}
+        title="ไม่มีตัวสะกด / 无韵尾"
+      >
+        <span className="flex items-baseline gap-2">
+          <span className="text-2xl">—</span>
+          <span className="font-cn text-xs text-muted-foreground">
+            แม่ ก กา / 无韵尾
+          </span>
+        </span>
+        <span className="font-cn text-[10px] text-muted-foreground">
+          ไม่มีตัวสะกด
+        </span>
+      </button>
+
+      <p className="font-cn text-[11px] leading-snug text-muted-foreground">
+        按泰语韵尾类别选择音节末尾的辅音。不同字母在词尾可能有相同的发音。
+        <br />
+        <span className="font-thai">
+          เลือกพยัญชนะท้ายพยางค์ตามมาตราตัวสะกด พยัญชนะที่เขียนต่างกันอาจออกเสียงท้ายเหมือนกัน
+        </span>
+      </p>
+
+      {groups.map((g) => (
+        <div
+          key={g.key}
+          className="rounded-md border border-border/60 p-2"
+        >
+          <div className="mb-2 flex flex-wrap items-baseline justify-between gap-1 px-1">
+            <span className="font-thai text-sm font-semibold">
+              {g.thName}{" "}
+              <span className="font-cn text-xs font-normal text-muted-foreground">
+                / {g.zhName}
+              </span>
             </span>
-          </button>
-        );
-      })}
+            <span className="font-cn text-[10px] text-muted-foreground">
+              {g.short} {g.ipa ?? ""}
+            </span>
+          </div>
+          <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8">
+            {g.consonants.map((c) => {
+              const active = selected === c;
+              const isPrimary = primaryChars.has(c);
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSelect(c);
+                  }}
+                  className={`font-thai relative flex items-center justify-center rounded-md border p-2 text-lg transition-colors ${
+                    active
+                      ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
+                      : "hover:bg-muted"
+                  }`}
+                  title={
+                    isPrimary
+                      ? `${c} · ${g.thName} · ${g.short} — 同组代表字 / ตัวสะกดตรงมาตรา`
+                      : `${c} · ${g.thName} · ${g.short}`
+                  }
+                >
+                  <span>{c}</span>
+                  {isPrimary && (
+                    <span
+                      aria-hidden
+                      className="absolute right-1 top-0.5 text-[9px] text-muted-foreground"
+                    >
+                      ·
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
