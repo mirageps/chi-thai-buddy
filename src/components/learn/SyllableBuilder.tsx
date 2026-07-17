@@ -11,7 +11,6 @@ import {
   finalGroupOf,
   liveOrDead,
   lookupVocab,
-  type FinalKey,
 } from "@/data/finals";
 import { speakThai } from "@/lib/speech";
 import { useSpeechSupported } from "@/hooks/useSpeechSupported";
@@ -19,18 +18,14 @@ import { useSpeechSupported } from "@/hooks/useSpeechSupported";
 export function SyllableBuilder() {
   const [cIdx, setCIdx] = useState(0); // ก
   const [vIdx, setVIdx] = useState(1); // า
-  const [fKey, setFKey] = useState<FinalKey>("none");
+  const [finalChar, setFinalChar] = useState<string | null>(null);
   const [tIdx, setTIdx] = useState(0); // no tone
 
   const consonant = CONSONANTS[cIdx];
   const vowel = VOWELS[vIdx];
   const tone = TONES[tIdx];
-  const finalEntry =
-    fKey === "none"
-      ? null
-      : PRIMARY_FINAL_CONSONANTS.find((f) => f.key === fKey) ?? null;
-  const finalChar = finalEntry?.char ?? "";
   const finalGroup = finalChar ? finalGroupOf(finalChar) : FINALS[0];
+  const finalKey = finalGroup?.key ?? "none";
 
   const syllable = useMemo(() => {
     // 1) vowel + initial consonant
@@ -51,7 +46,7 @@ export function SyllableBuilder() {
   }, [consonant, vowel, tone, finalChar]);
 
   const meaning = lookupVocab(syllable);
-  const liveDead = liveOrDead(fKey, vowel.length);
+  const liveDead = liveOrDead(finalKey, vowel.length);
   const romanized = `${consonant.initialSound}${vowel.romanized}${
     finalGroup?.short && finalGroup.short !== "—" ? finalGroup.short.replace("-", "") : ""
   }`;
