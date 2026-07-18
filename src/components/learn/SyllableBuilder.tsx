@@ -29,7 +29,6 @@ export function SyllableBuilder() {
 
   const consonant = CONSONANTS[cIdx];
   const vowel = VOWELS[vIdx];
-  const tone = TONES[tIdx];
   const vowelPattern = vowelPatternByIndex(vIdx);
   const vowelSupportsFinal = vowelPattern?.supportsFinal ?? false;
   // If the currently-selected vowel does not support a final, force finalChar = null
