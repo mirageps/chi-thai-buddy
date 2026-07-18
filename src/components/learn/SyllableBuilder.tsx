@@ -252,7 +252,11 @@ export function SyllableBuilder() {
           colorVar="--final"
           defaultOpen
         >
-          <FinalSelector selected={finalChar} onSelect={setFinalChar} />
+          <FinalSelector
+            selected={effectiveFinalChar}
+            onSelect={setFinalChar}
+            disabled={!vowelSupportsFinal}
+          />
         </CollapsibleSelector>
         <CollapsibleSelector title="④ 声调 / วรรณยุกต์" colorVar="--tone" defaultOpen>
           <SelectorGrid
@@ -424,23 +428,34 @@ function SelectorGrid({
 function FinalSelector({
   selected,
   onSelect,
+  disabled,
 }: {
   selected: string | null;
   onSelect: (c: string | null) => void;
+  disabled?: boolean;
 }) {
   const primaryChars = new Set(PRIMARY_FINAL_CONSONANTS.map((p) => p.char));
   const groups = FINALS.filter((g) => g.key !== "none");
   return (
     <div className="flex flex-col gap-3">
+      {disabled && (
+        <div className="rounded-md border border-dashed border-border/60 bg-muted/40 p-2 text-[11px] leading-snug text-muted-foreground">
+          <div>当前版本暂不支持在此元音后添加其他韵尾。</div>
+          <div className="font-thai">
+            เวอร์ชันปัจจุบันยังไม่รองรับการเพิ่มตัวสะกดหลังสระนี้
+          </div>
+        </div>
+      )}
       {/* None option */}
       <button
         type="button"
         onClick={() => onSelect(null)}
+        disabled={disabled}
         className={`font-thai flex items-center justify-between rounded-md border p-3 text-left transition-colors ${
           selected === null
             ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
             : "hover:bg-muted"
-        }`}
+        } ${disabled ? "opacity-60" : ""}`}
         title="ไม่มีตัวสะกด / 无韵尾"
       >
         <span className="flex items-baseline gap-2">
@@ -486,6 +501,7 @@ function FinalSelector({
                 <button
                   key={c}
                   type="button"
+                  disabled={disabled}
                   onClick={(e) => {
                     e.preventDefault();
                     onSelect(c);
@@ -494,7 +510,7 @@ function FinalSelector({
                     active
                       ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
                       : "hover:bg-muted"
-                  }`}
+                  } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
                   title={
                     isPrimary
                       ? `${c} · ${g.thName} · ${g.short} — 同组代表字 / ตัวสะกดตรงมาตรา`
