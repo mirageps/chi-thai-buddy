@@ -14,6 +14,12 @@ import {
 } from "@/data/finals";
 import { speakThai } from "@/lib/speech";
 import { useSpeechSupported } from "@/hooks/useSpeechSupported";
+import {
+  composeThaiSyllable,
+  vowelPatternByIndex,
+  toneShapeOf,
+  toneMarkFromIndex,
+} from "@/lib/syllable";
 
 export function SyllableBuilder() {
   const [cIdx, setCIdx] = useState(0); // ก
@@ -23,33 +29,39 @@ export function SyllableBuilder() {
 
   const consonant = CONSONANTS[cIdx];
   const vowel = VOWELS[vIdx];
-  const tone = TONES[tIdx];
-  const finalGroup = finalChar ? finalGroupOf(finalChar) : FINALS[0];
+  const vowelPattern = vowelPatternByIndex(vIdx);
+  const vowelSupportsFinal = vowelPattern?.supportsFinal ?? false;
+  // If the currently-selected vowel does not support a final, force finalChar = null
+  // (do it in a memo so no extra state / effect is needed).
+  const effectiveFinalChar = vowelSupportsFinal ? finalChar : null;
+  const finalGroup = effectiveFinalChar
+    ? finalGroupOf(effectiveFinalChar)
+    : FINALS[0];
   const finalKey = finalGroup?.key ?? "none";
 
-  const syllable = useMemo(() => {
-    // 1) vowel + initial consonant
-    let s = vowel.render(consonant.char);
-    // 2) insert tone symbol right after the initial consonant
-    if (tone.symbol) {
-      const idx = s.indexOf(consonant.char);
-      if (idx < 0) s = s + tone.symbol;
-      else
-        s =
-          s.slice(0, idx + consonant.char.length) +
-          tone.symbol +
-          s.slice(idx + consonant.char.length);
-    }
-    // 3) append final consonant if any
-    if (finalChar) s = s + finalChar;
-    return s;
-  }, [consonant, vowel, tone, finalChar]);
+  const composed = useMemo(
+    () =>
+      composeThaiSyllable({
+        initial: consonant.char,
+        vowelIndex: vIdx,
+        final: effectiveFinalChar,
+        toneIndex: tIdx,
+      }),
+    [consonant.char, vIdx, effectiveFinalChar, tIdx],
+  );
+  const syllable = composed.text;
+  const toneShape = toneShapeOf(toneMarkFromIndex(tIdx));
 
-  const meaning = lookupVocab(syllable);
+  // Lexical lookup only when composition is supported (never invent words)
+  const meaning = composed.supported ? lookupVocab(syllable) : null;
   const liveDead = liveOrDead(finalKey, vowel.length);
-  const romanized = `${consonant.initialSound}${vowel.romanized}${
-    finalGroup?.short && finalGroup.short !== "—" ? finalGroup.short.replace("-", "") : ""
-  }`;
+  const romanized = composed.supported
+    ? `${consonant.initialSound}${vowel.romanized}${
+        finalGroup?.short && finalGroup.short !== "—"
+          ? finalGroup.short.replace("-", "")
+          : ""
+      }`
+    : "—";
 
   return (
     <div className="flex flex-col gap-6">
@@ -59,7 +71,7 @@ export function SyllableBuilder() {
           你的音节 / พยางค์ของคุณ
         </p>
         <div className="font-thai text-8xl font-bold leading-[1.4] drop-shadow-lg py-4">
-          {syllable}
+          {syllable || "—"}
         </div>
         <Button
           size="sm"
@@ -77,15 +89,22 @@ export function SyllableBuilder() {
           <Badge variant="secondary" className="font-thai">
             {vowel.form} · {vowel.zhSound}
           </Badge>
-          {finalChar && (
+          {effectiveFinalChar && (
             <Badge variant="secondary" className="font-thai">
-              {finalChar} · {finalGroup?.short}
+              {effectiveFinalChar} · {finalGroup?.short}
             </Badge>
           )}
-          <Badge variant="secondary">
-            {tone.zhName} {tone.arrow}
+          <Badge variant="secondary" className="font-thai">
+            {toneShape.thLabel} · {toneShape.zhLabel}
           </Badge>
         </div>
+        {!composed.supported && composed.warnings.length > 0 && (
+          <div className="rounded-md bg-black/20 px-3 py-2 text-center text-[11px] leading-relaxed">
+            {composed.warnings.map((w, i) => (
+              <div key={i} className="font-thai">{w}</div>
+            ))}
+          </div>
+        )}
       </Card>
 
       {/* Details */}
@@ -118,9 +137,9 @@ export function SyllableBuilder() {
           zh="韵尾"
           th="ตัวสะกด"
           value={
-            finalChar ? (
+            effectiveFinalChar ? (
               <span className="font-thai">
-                {finalChar}{" "}
+                {effectiveFinalChar}{" "}
                 <span className="text-muted-foreground">
                   ({finalGroup?.short}
                   {finalGroup?.ipa ? ` · ${finalGroup.ipa}` : ""})
@@ -149,10 +168,10 @@ export function SyllableBuilder() {
           value={
             <>
               <span className="font-thai">
-                {tone.symbol ? tone.symbol : "—"}
+                {toneShape.symbol ? toneShape.symbol : "—"}
               </span>{" "}
               <span className="text-muted-foreground">
-                ({tone.zhName} {tone.arrow})
+                ({toneShape.zhLabel} / {toneShape.thLabel})
               </span>
             </>
           }
@@ -232,7 +251,11 @@ export function SyllableBuilder() {
           colorVar="--final"
           defaultOpen
         >
-          <FinalSelector selected={finalChar} onSelect={setFinalChar} />
+          <FinalSelector
+            selected={effectiveFinalChar}
+            onSelect={setFinalChar}
+            disabled={!vowelSupportsFinal}
+          />
         </CollapsibleSelector>
         <CollapsibleSelector title="④ 声调 / วรรณยุกต์" colorVar="--tone" defaultOpen>
           <SelectorGrid
@@ -404,23 +427,34 @@ function SelectorGrid({
 function FinalSelector({
   selected,
   onSelect,
+  disabled,
 }: {
   selected: string | null;
   onSelect: (c: string | null) => void;
+  disabled?: boolean;
 }) {
   const primaryChars = new Set(PRIMARY_FINAL_CONSONANTS.map((p) => p.char));
   const groups = FINALS.filter((g) => g.key !== "none");
   return (
     <div className="flex flex-col gap-3">
+      {disabled && (
+        <div className="rounded-md border border-dashed border-border/60 bg-muted/40 p-2 text-[11px] leading-snug text-muted-foreground">
+          <div>当前版本暂不支持在此元音后添加其他韵尾。</div>
+          <div className="font-thai">
+            เวอร์ชันปัจจุบันยังไม่รองรับการเพิ่มตัวสะกดหลังสระนี้
+          </div>
+        </div>
+      )}
       {/* None option */}
       <button
         type="button"
         onClick={() => onSelect(null)}
+        disabled={disabled}
         className={`font-thai flex items-center justify-between rounded-md border p-3 text-left transition-colors ${
           selected === null
             ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
             : "hover:bg-muted"
-        }`}
+        } ${disabled ? "opacity-60" : ""}`}
         title="ไม่มีตัวสะกด / 无韵尾"
       >
         <span className="flex items-baseline gap-2">
@@ -466,6 +500,7 @@ function FinalSelector({
                 <button
                   key={c}
                   type="button"
+                  disabled={disabled}
                   onClick={(e) => {
                     e.preventDefault();
                     onSelect(c);
@@ -474,7 +509,7 @@ function FinalSelector({
                     active
                       ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
                       : "hover:bg-muted"
-                  }`}
+                  } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
                   title={
                     isPrimary
                       ? `${c} · ${g.thName} · ${g.short} — 同组代表字 / ตัวสะกดตรงมาตรา`
