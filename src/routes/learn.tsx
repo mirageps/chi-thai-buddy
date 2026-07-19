@@ -42,9 +42,9 @@ function LearnPage() {
   const navigate = useNavigate({ from: "/learn" });
 
   const setCat = (next: Category) =>
-    navigate({ search: (prev) => ({ ...prev, cat: next }) });
+    navigate({ search: { cat: next, mode } });
   const setMode = (next: string) =>
-    navigate({ search: (prev) => ({ ...prev, mode: next as Mode }) });
+    navigate({ search: { cat, mode: next as Mode } });
 
   return (
     <AppLayout
