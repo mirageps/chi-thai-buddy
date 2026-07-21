@@ -36,7 +36,7 @@ export function AppLayout({
 
       <main
         className="mx-auto max-w-5xl px-4 py-6 sm:py-8"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 6rem)" }}
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 5rem)" }}
       >
         {children}
       </main>
