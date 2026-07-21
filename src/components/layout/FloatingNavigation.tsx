@@ -94,7 +94,7 @@ export function FloatingNavigation() {
         </div>
       ) : (
         <nav
-          className={`pointer-events-auto flex items-center gap-1 rounded-full p-1.5 transition-[width,padding] duration-250 ease-out ${GLASS} ${
+          className={`pointer-events-auto flex items-center gap-1 rounded-full p-1.5 transition-all duration-300 ease-out ${GLASS} ${
             compact ? "" : "px-2"
           }`}
           style={{ maxWidth: compact ? "16rem" : "22rem", width: "88vw" }}
