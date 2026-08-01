@@ -1,13 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useCallback } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { Flashcard } from "@/components/learn/Flashcard";
 import { Quiz } from "@/components/learn/Quiz";
 import { SyllableBuilder } from "@/components/learn/SyllableBuilder";
 import { MixedReview } from "@/components/learn/MixedReview";
-import { BookOpen, Brain, Blocks, Shuffle } from "lucide-react";
+import { BookOpen, Brain, Blocks, Shuffle, ChevronLeft } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { LearningCategoryCard } from "@/components/layout/LearningCategoryCard";
+import { Button } from "@/components/ui/button";
+import { useEdgeSwipeBack } from "@/hooks/useEdgeSwipeBack";
 
 type Category = "consonants" | "vowels" | "finals" | "tones";
 type Mode = "flashcard" | "quiz" | "builder" | "review";
@@ -29,8 +32,8 @@ const VALID_CATS: Category[] = ["consonants", "vowels", "finals", "tones"];
 const VALID_MODES: Mode[] = ["flashcard", "quiz", "builder", "review"];
 
 export const Route = createFileRoute("/learn")({
-  validateSearch: (raw: Record<string, unknown>): { cat: Category; mode: Mode } => {
-    const cat = VALID_CATS.includes(raw.cat as Category) ? (raw.cat as Category) : "consonants";
+  validateSearch: (raw: Record<string, unknown>): { cat?: Category; mode: Mode } => {
+    const cat = VALID_CATS.includes(raw.cat as Category) ? (raw.cat as Category) : undefined;
     const mode = VALID_MODES.includes(raw.mode as Mode) ? (raw.mode as Mode) : "flashcard";
     return { cat, mode };
   },
@@ -46,10 +49,69 @@ function LearnPage() {
   const setMode = (next: string) =>
     navigate({ search: { cat, mode: next as Mode } });
 
+  // Back to the category page: drops the active-lesson state but keeps `mode`.
+  const backToCategories = useCallback(() => {
+    navigate({ search: { mode } });
+  }, [navigate, mode]);
+
+  useEdgeSwipeBack(!!cat, backToCategories, { edge: 28, threshold: 80 });
+
+  if (!cat) {
+    return (
+      <AppLayout
+        hero={
+          <>
+            <h1 className="text-2xl font-bold sm:text-3xl">
+              学习 <span className="font-thai text-lg opacity-90">เรียน</span>
+            </h1>
+            <p className="text-sm opacity-90">
+              请选择学习类别 ·{" "}
+              <span className="font-thai text-xs opacity-80">เลือกหมวดหมู่ที่ต้องการเรียน</span>
+            </p>
+          </>
+        }
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {CATEGORIES.map((c) => (
+            <button
+              key={c.key}
+              type="button"
+              onClick={() => setCat(c.key)}
+              className="block text-left"
+            >
+              <LearningCategoryCard th={c.th} zh={c.zh} desc={c.desc} colorVar={c.colorVar} />
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => navigate({ search: { cat: "consonants", mode: "builder" } })}
+            className="block text-left sm:col-span-2 lg:col-span-4"
+          >
+            <LearningCategoryCard
+              th="ประสมพยางค์"
+              zh="拼音节"
+              desc="选择辅音 + 元音 + 韵尾 + 声调，实时拼出泰语音节。"
+              colorVar="--primary"
+              emphasis
+            />
+          </button>
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout
       hero={
         <>
+          <button
+            type="button"
+            onClick={backToCategories}
+            className="-ml-1 flex w-fit items-center gap-1 rounded-full px-2 py-1 text-sm opacity-90 transition-colors hover:bg-white/15"
+          >
+            <ChevronLeft className="h-4 w-4" />
+            选择学习类别 <span className="font-thai text-xs opacity-80">เลือกหมวดหมู่</span>
+          </button>
           <h1 className="text-2xl font-bold sm:text-3xl">
             学习 <span className="font-thai text-lg opacity-90">เรียน</span>
           </h1>
@@ -57,6 +119,22 @@ function LearnPage() {
         </>
       }
     >
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <div className="text-sm text-muted-foreground">
+          当前类别 ·{" "}
+          <span className="font-thai">
+            {CATEGORIES.find((c) => c.key === cat)?.th}
+          </span>{" "}
+          <span className="font-semibold text-foreground">
+            {CATEGORIES.find((c) => c.key === cat)?.zh}
+          </span>
+        </div>
+        <Button variant="outline" size="sm" onClick={backToCategories}>
+          <ChevronLeft className="mr-1 h-4 w-4" />
+          返回
+        </Button>
+      </div>
+
       <div className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {CATEGORIES.map((c) => (
           <button key={c.key} type="button" onClick={() => setCat(c.key)} className="block text-left">
