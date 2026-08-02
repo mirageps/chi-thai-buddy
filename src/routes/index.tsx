@@ -93,19 +93,19 @@ function HomePage() {
       {/* Quick actions */}
       <div className="mb-6 flex flex-wrap gap-2">
         <Button asChild size="sm">
-          <Link to="/learn" search={{ cat: "consonants", mode: "flashcard" }}>
+          <Link to="/learn" search={{ cat: "consonants" }}>
             <Play className="mr-1.5 h-4 w-4" />
             继续学习 <span className="font-thai ml-1 text-xs opacity-80">เรียนต่อ</span>
           </Link>
         </Button>
         <Button asChild size="sm" variant="secondary">
-          <Link to="/learn" search={{ mode: "flashcard" }}>
+          <Link to="/learn" search={{}}>
             <GraduationCap className="mr-1.5 h-4 w-4" />
             开始学习 <span className="font-thai ml-1 text-xs opacity-80">เริ่มเรียน</span>
           </Link>
         </Button>
         <Button asChild size="sm" variant="outline">
-          <Link to="/learn" search={{ cat: "consonants", mode: "builder" }}>
+          <Link to="/learn/pinyin">
             <Blocks className="mr-1.5 h-4 w-4" />
             拼音节 <span className="font-thai ml-1 text-xs opacity-80">ประสมพยางค์</span>
           </Link>
@@ -332,7 +332,7 @@ function Section({
         </h2>
         <div className="flex items-center gap-1">
           <Button asChild size="sm" variant="ghost" className="text-xs">
-            <Link to="/learn" search={{ cat, mode: "flashcard" }}>
+            <Link to="/learn" search={{ cat }}>
               学习
             </Link>
           </Button>

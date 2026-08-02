@@ -21,7 +21,8 @@ export function useNavigationMode(): NavMode {
 
   const cat = search?.cat;
   const isActiveLesson =
-    pathname.startsWith("/learn") && typeof cat === "string" && cat.length > 0;
+    pathname.startsWith("/learn/pinyin") ||
+    (pathname.startsWith("/learn") && typeof cat === "string" && cat.length > 0);
 
   if (isActiveLesson) return "lesson";
   if (scroll === "down") return "compact";
