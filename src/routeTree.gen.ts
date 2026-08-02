@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as LearnPinyinRouteImport } from './routes/learn.pinyin'
 
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
@@ -28,34 +30,49 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnIndexRoute = LearnIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LearnRoute,
+} as any)
+const LearnPinyinRoute = LearnPinyinRouteImport.update({
+  id: '/pinyin',
+  path: '/pinyin',
+  getParentRoute: () => LearnRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/profile': typeof ProfileRoute
+  '/learn/pinyin': typeof LearnPinyinRoute
+  '/learn/': typeof LearnIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/learn': typeof LearnRoute
   '/profile': typeof ProfileRoute
+  '/learn/pinyin': typeof LearnPinyinRoute
+  '/learn': typeof LearnIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/learn': typeof LearnRoute
+  '/learn': typeof LearnRouteWithChildren
   '/profile': typeof ProfileRoute
+  '/learn/pinyin': typeof LearnPinyinRoute
+  '/learn/': typeof LearnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/learn' | '/profile'
+  fullPaths: '/' | '/learn' | '/profile' | '/learn/pinyin' | '/learn/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/learn' | '/profile'
-  id: '__root__' | '/' | '/learn' | '/profile'
+  to: '/' | '/profile' | '/learn/pinyin' | '/learn'
+  id: '__root__' | '/' | '/learn' | '/profile' | '/learn/pinyin' | '/learn/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LearnRoute: typeof LearnRoute
+  LearnRoute: typeof LearnRouteWithChildren
   ProfileRoute: typeof ProfileRoute
 }
 
@@ -82,12 +99,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn/': {
+      id: '/learn/'
+      path: '/'
+      fullPath: '/learn/'
+      preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof LearnRoute
+    }
+    '/learn/pinyin': {
+      id: '/learn/pinyin'
+      path: '/pinyin'
+      fullPath: '/learn/pinyin'
+      preLoaderRoute: typeof LearnPinyinRouteImport
+      parentRoute: typeof LearnRoute
+    }
   }
 }
 
+interface LearnRouteChildren {
+  LearnPinyinRoute: typeof LearnPinyinRoute
+  LearnIndexRoute: typeof LearnIndexRoute
+}
+
+const LearnRouteChildren: LearnRouteChildren = {
+  LearnPinyinRoute: LearnPinyinRoute,
+  LearnIndexRoute: LearnIndexRoute,
+}
+
+const LearnRouteWithChildren = LearnRoute._addFileChildren(LearnRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LearnRoute: LearnRoute,
+  LearnRoute: LearnRouteWithChildren,
   ProfileRoute: ProfileRoute,
 }
 export const routeTree = rootRouteImport
