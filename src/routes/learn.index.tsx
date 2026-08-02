@@ -70,6 +70,7 @@ function LearnPage() {
   const switcherBtnRef = useRef<HTMLButtonElement>(null);
   const enteredRef = useRef<Category | null>(null);
   const keepScrollRef = useRef<number | null>(null);
+  const preOpenScrollRef = useRef<number | null>(null);
 
   const enterCategory = (next: Category) => {
     setLearningMode("overview");
@@ -83,7 +84,9 @@ function LearnPage() {
 
   // Switch category INSIDE the lesson: keep learningMode, keep scroll position.
   const switchCategory = (next: Category) => {
-    const y = window.scrollY;
+    // The trigger click can scroll the header into view; use the pre-open offset.
+    const y = preOpenScrollRef.current ?? window.scrollY;
+    preOpenScrollRef.current = null;
     setSwitcherOpen(false);
     switcherBtnRef.current?.focus({ preventScroll: true });
     if (next === cat) return;
@@ -201,6 +204,9 @@ function LearnPage() {
                 ref={switcherBtnRef}
                 variant="secondary"
                 size="sm"
+                onPointerDownCapture={() => {
+                  preOpenScrollRef.current = window.scrollY;
+                }}
                 aria-label="切换分类 / เปลี่ยนหมวดหมู่"
                 className="min-h-[44px]"
               >
