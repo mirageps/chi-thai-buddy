@@ -113,7 +113,7 @@ function LearnPage() {
     keepScrollRef.current = null;
     const restore = () => window.scrollTo({ top: y });
     requestAnimationFrame(restore);
-    const timers = [50, 160, 320, 480].map((d) => window.setTimeout(restore, d));
+    const timers = [50, 200].map((d) => window.setTimeout(restore, d));
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, [cat]);
 
