@@ -3,8 +3,15 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Play, Blocks, GraduationCap } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { CONSONANTS, VOWELS, TONES, classLabel } from "@/data/thai";
+import { CONSONANTS, VOWELS, TONES } from "@/data/thai";
 import { FINALS } from "@/data/finals";
+import {
+  homeConsonants,
+  homeVowels,
+  vowelKind,
+  VOWEL_KIND_LABEL,
+  CLASS_LEGEND,
+} from "@/lib/home-order";
 
 const TITLE = "学泰语 · 泰语字母总览 | เรียนภาษาไทย";
 const DESC =
@@ -23,14 +30,6 @@ export const Route = createFileRoute("/")({
   }),
   component: HomePage,
 });
-
-const MID = CONSONANTS.filter((c) => c.cls === "mid");
-const HIGH = CONSONANTS.filter((c) => c.cls === "high");
-const LOW = CONSONANTS.filter((c) => c.cls === "low");
-
-const DIPH = VOWELS.filter((v) => v.zhName.startsWith("复合"));
-const SHORT_V = VOWELS.filter((v) => v.length === "short" && !v.zhName.startsWith("复合"));
-const LONG_V = VOWELS.filter((v) => v.length === "long" && !v.zhName.startsWith("复合"));
 
 const SUMMARY = [
   {
@@ -149,73 +148,109 @@ function HomePage() {
           cat="consonants"
           className="lg:col-span-2"
         >
-          {[
-            { list: MID, cls: "mid" as const },
-            { list: HIGH, cls: "high" as const },
-            { list: LOW, cls: "low" as const },
-          ].map(({ list, cls }) => {
-            const lbl = classLabel(cls);
-            return (
-              <div key={cls} className="mb-3 last:mb-0">
-                <div className="mb-1.5 flex items-baseline gap-2 text-xs">
-                  <span className="font-semibold">{lbl.zh}</span>
-                  <span className="font-thai text-muted-foreground">{lbl.th}</span>
-                  <span className="text-muted-foreground">· {list.length}</span>
+          {/* Legend: class is secondary metadata, not the grouping */}
+          <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+            <span>按 ก–ฮ 顺序 · <span className="font-thai">เรียงตาม ก–ฮ</span></span>
+            {CLASS_LEGEND.map((l) => (
+              <span key={l.cls} className="flex items-center gap-1">
+                <span
+                  aria-hidden
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: `var(--class-${l.cls})` }}
+                />
+                <span className="text-foreground">{l.zh}</span>
+                <span className="font-thai">{l.th}</span>
+              </span>
+            ))}
+          </div>
+          <ol className="grid grid-cols-5 gap-1.5 sm:grid-cols-8 lg:grid-cols-11">
+            {homeConsonants.map((c) => (
+              <li key={c.char}>
+                <div
+                  title={`${c.name} · ${c.zhMeaning}`}
+                  aria-label={`${c.char} ${c.name} · ${c.zhMeaning} · ${
+                    c.cls === "mid" ? "中辅音 อักษรกลาง" : c.cls === "high" ? "高辅音 อักษรสูง" : "低辅音 อักษรต่ำ"
+                  }`}
+                  className="flex min-h-[44px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
+                  style={{
+                    borderColor: `color-mix(in oklab, var(--class-${c.cls}) 45%, var(--border))`,
+                  }}
+                >
+                  <span
+                    className="font-thai text-lg leading-[1.4]"
+                    style={{ color: "var(--consonant)" }}
+                  >
+                    {c.char}
+                  </span>
+                  <span
+                    className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
+                    style={{
+                      color: `var(--class-${c.cls})`,
+                      backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 12%, var(--card))`,
+                    }}
+                  >
+                    {c.cls === "mid" ? "中" : c.cls === "high" ? "高" : "低"}
+                  </span>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {list.map((c) => (
-                    <span
-                      key={c.char}
-                      title={`${c.name} · ${c.zhMeaning}`}
-                      className="font-thai grid h-9 w-9 place-items-center rounded-lg border text-lg leading-[1.4]"
-                      style={{
-                        color: "var(--consonant)",
-                        backgroundColor:
-                          "color-mix(in oklab, var(--consonant) 8%, var(--card))",
-                        borderColor:
-                          "color-mix(in oklab, var(--consonant) 30%, var(--border))",
-                      }}
-                    >
-                      {c.char}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+              </li>
+            ))}
+          </ol>
         </Section>
 
         {/* Vowels */}
         <Section id="vowels" th="สระไทย" zh="泰语元音" colorVar="--vowel" cat="vowels">
-          {[
-            { title: "短元音", th: "สระเสียงสั้น", list: SHORT_V },
-            { title: "长元音", th: "สระเสียงยาว", list: LONG_V },
-            { title: "复合元音", th: "สระประสม", list: DIPH },
-          ].map((g) => (
-            <div key={g.title} className="mb-3 last:mb-0">
-              <div className="mb-1.5 flex items-baseline gap-2 text-xs">
-                <span className="font-semibold">{g.title}</span>
-                <span className="font-thai text-muted-foreground">{g.th}</span>
-                <span className="text-muted-foreground">· {g.list.length}</span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {g.list.map((v) => (
+          {/* Legend: length/type is secondary metadata; order follows the lesson order */}
+          <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+            <span>按课程顺序 · <span className="font-thai">เรียงตามบทเรียน</span></span>
+            {(["short", "long", "diph"] as const).map((k) => {
+              const l = VOWEL_KIND_LABEL[k];
+              return (
+                <span key={k} className="flex items-center gap-1">
                   <span
-                    key={v.form + v.romanized}
+                    aria-hidden
+                    className="h-2 w-2 rounded-full"
+                    style={{ backgroundColor: `var(${l.colorVar})` }}
+                  />
+                  <span className="text-foreground">{l.zh}</span>
+                  <span className="font-thai">{l.th}</span>
+                </span>
+              );
+            })}
+          </div>
+          <ol className="grid grid-cols-4 gap-1.5 sm:grid-cols-6">
+            {homeVowels.map((v) => {
+              const k = vowelKind(v);
+              const l = VOWEL_KIND_LABEL[k];
+              return (
+                <li key={v.form + v.romanized}>
+                  <div
                     title={`${v.zhName} · ${v.zhSound}`}
-                    className="font-thai rounded-lg border px-2 py-1 text-base leading-[1.5]"
+                    aria-label={`${v.form} ${v.zhName} · ${l.zh}`}
+                    className="flex min-h-[44px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
                     style={{
-                      color: "var(--vowel)",
-                      backgroundColor: "color-mix(in oklab, var(--vowel) 8%, var(--card))",
-                      borderColor: "color-mix(in oklab, var(--vowel) 30%, var(--border))",
+                      borderColor: `color-mix(in oklab, var(${l.colorVar}) 45%, var(--border))`,
                     }}
                   >
-                    {v.form}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+                    <span
+                      className="font-thai text-base leading-[1.6]"
+                      style={{ color: "var(--vowel)" }}
+                    >
+                      {v.form}
+                    </span>
+                    <span
+                      className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
+                      style={{
+                        color: `var(${l.colorVar})`,
+                        backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 12%, var(--card))`,
+                      }}
+                    >
+                      {k === "short" ? "短" : k === "long" ? "长" : "复"}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
         </Section>
 
         {/* Finals */}
