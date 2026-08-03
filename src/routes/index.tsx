@@ -3,8 +3,15 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp, Play, Blocks, GraduationCap } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { CONSONANTS, VOWELS, TONES, classLabel } from "@/data/thai";
+import { CONSONANTS, VOWELS, TONES } from "@/data/thai";
 import { FINALS } from "@/data/finals";
+import {
+  homeConsonants,
+  homeVowels,
+  vowelKind,
+  VOWEL_KIND_LABEL,
+  CLASS_LEGEND,
+} from "@/lib/home-order";
 
 const TITLE = "学泰语 · 泰语字母总览 | เรียนภาษาไทย";
 const DESC =
@@ -23,14 +30,6 @@ export const Route = createFileRoute("/")({
   }),
   component: HomePage,
 });
-
-const MID = CONSONANTS.filter((c) => c.cls === "mid");
-const HIGH = CONSONANTS.filter((c) => c.cls === "high");
-const LOW = CONSONANTS.filter((c) => c.cls === "low");
-
-const DIPH = VOWELS.filter((v) => v.zhName.startsWith("复合"));
-const SHORT_V = VOWELS.filter((v) => v.length === "short" && !v.zhName.startsWith("复合"));
-const LONG_V = VOWELS.filter((v) => v.length === "long" && !v.zhName.startsWith("复合"));
 
 const SUMMARY = [
   {
