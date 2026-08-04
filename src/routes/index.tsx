@@ -185,7 +185,7 @@ function HomePage() {
                   <span
                     className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
                     style={{
-                      color: `var(--class-${c.cls})`,
+                      color: `var(--class-${c.cls}-ink)`,
                       backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 12%, var(--card))`,
                     }}
                   >
@@ -240,7 +240,7 @@ function HomePage() {
                     <span
                       className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
                       style={{
-                        color: `var(${l.colorVar})`,
+                        color: `var(${l.colorVar}-ink)`,
                         backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 12%, var(--card))`,
                       }}
                     >

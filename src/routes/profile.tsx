@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/card";
 import { User, Settings, Info, ChevronRight } from "lucide-react";
+import { ThemeSelector } from "@/components/settings/ThemeSelector";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
@@ -32,6 +33,10 @@ function ProfilePage() {
             ผู้เรียนใหม่ · 即将开放个人账户
           </div>
         </div>
+      </Card>
+
+      <Card className="mb-6 p-5 shadow-[var(--shadow-card)]">
+        <ThemeSelector />
       </Card>
 
       <Card className="mb-6 p-5 shadow-[var(--shadow-card)]">
