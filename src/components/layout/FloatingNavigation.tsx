@@ -10,7 +10,7 @@ const ITEMS = [
 ] as const;
 
 const GLASS =
-  "border border-white/25 bg-background/60 backdrop-blur-xl supports-[backdrop-filter]:bg-background/45 shadow-[0_8px_28px_-10px_oklch(0_0_0/0.35)] dark:border-white/10";
+  "border border-border bg-card/90 backdrop-blur-xl supports-[backdrop-filter]:bg-card/75 shadow-[var(--shadow-soft)]";
 
 export function FloatingNavigation() {
   const mode = useNavigationMode();
