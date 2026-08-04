@@ -116,7 +116,7 @@ export function Flashcard({ mode }: Props) {
 
       <Card
         onClick={() => setFlipped((f) => !f)}
-        className={`relative flex min-h-[22rem] w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden bg-gradient-to-br ${accent} to-card px-6 py-10 shadow-[var(--shadow-soft)] transition-transform hover:scale-[1.02]`}
+        className={`relative flex min-h-[22rem] w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden border-[color:var(--fc-border)] bg-gradient-to-br ${accent} to-[color:var(--fc-surface)] px-6 py-10 shadow-[var(--fc-shadow)] transition-transform hover:scale-[1.02]`}
       >
         <div className="absolute right-3 top-3 text-xs text-white/70">
           <RotateCw className="h-4 w-4" />
