@@ -1,4 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+
+// Runs before paint on the client (prevents a one-frame wrong-theme flash when
+// hydration resets the class set by the inline boot script); no-op during SSR.
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export type ThemePreference = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
@@ -36,7 +41,7 @@ export function useTheme() {
 
   // Read the stored preference after mount (the inline boot script already
   // applied the correct class, so there is no flash here).
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const pref = readPreference();
     setPreferenceState(pref);
     const next = pref === "system" ? systemTheme() : pref;
