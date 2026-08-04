@@ -23,9 +23,10 @@ interface Props {
 }
 
 function classColor(cls: "mid" | "high" | "low") {
-  if (cls === "mid") return "bg-[color:var(--class-mid)] text-white";
-  if (cls === "high") return "bg-[color:var(--class-high)] text-white";
-  return "bg-[color:var(--class-low)] text-white";
+  // Flashcard keeps its own frozen palette (see --fc-* tokens in styles.css).
+  if (cls === "mid") return "bg-[color:var(--fc-class-mid)] text-white";
+  if (cls === "high") return "bg-[color:var(--fc-class-high)] text-white";
+  return "bg-[color:var(--fc-class-low)] text-white";
 }
 
 export function Flashcard({ mode }: Props) {
@@ -82,12 +83,12 @@ export function Flashcard({ mode }: Props) {
 
   const accent =
     mode === "consonants"
-      ? "from-[color:var(--consonant)]"
+      ? "from-[color:var(--fc-consonant)]"
       : mode === "vowels"
-        ? "from-[color:var(--vowel)]"
+        ? "from-[color:var(--fc-vowel)]"
         : mode === "finals"
-          ? "from-[color:var(--final)]"
-          : "from-[color:var(--tone)]";
+          ? "from-[color:var(--fc-final)]"
+          : "from-[color:var(--fc-tone)]";
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -144,9 +145,9 @@ export function Flashcard({ mode }: Props) {
 
       {mode === "consonants" && (
         <div className="flex flex-wrap justify-center gap-2 text-xs">
-          <Badge className="bg-[color:var(--class-mid)] text-white">中辅音 อักษรกลาง</Badge>
-          <Badge className="bg-[color:var(--class-high)] text-white">高辅音 อักษรสูง</Badge>
-          <Badge className="bg-[color:var(--class-low)] text-white">低辅音 อักษรต่ำ</Badge>
+          <Badge className="bg-[color:var(--fc-class-mid)] text-white">中辅音 อักษรกลาง</Badge>
+          <Badge className="bg-[color:var(--fc-class-high)] text-white">高辅音 อักษรสูง</Badge>
+          <Badge className="bg-[color:var(--fc-class-low)] text-white">低辅音 อักษรต่ำ</Badge>
         </div>
       )}
     </div>
