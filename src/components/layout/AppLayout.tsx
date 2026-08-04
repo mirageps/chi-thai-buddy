@@ -24,7 +24,7 @@ export function AppLayout({
               variant="ghost"
               size="sm"
               onClick={toggle}
-              className="text-primary-foreground hover:bg-white/15 hover:text-primary-foreground"
+              className="text-primary-foreground hover:bg-foreground/10 hover:text-primary-foreground"
               title="切换主题 / สลับธีม"
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
