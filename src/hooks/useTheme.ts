@@ -44,11 +44,12 @@ export function useTheme() {
     applyResolved(next);
   }, []);
 
-  // Follow OS changes live while the preference is "system".
+  // Follow OS changes live while the *stored* preference is "system".
   useEffect(() => {
-    if (preference !== "system") return;
+    if (preference !== "system" || readPreference() !== "system") return;
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const onChange = () => {
+      if (readPreference() !== "system") return;
       const next: ResolvedTheme = mq.matches ? "dark" : "light";
       setResolved(next);
       applyResolved(next);
