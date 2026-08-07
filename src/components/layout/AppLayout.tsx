@@ -13,7 +13,7 @@ export function AppLayout({
   const { theme, toggle } = useTheme();
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-[image:var(--gradient-hero)] text-primary-foreground">
+      <header className="border-b bg-[image:var(--gradient-hero)] text-[color:var(--hero-ink)]">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-6 sm:py-8">
           <div className="flex items-center justify-between gap-2 text-sm opacity-90">
             <div className="flex items-center gap-2">
@@ -24,8 +24,9 @@ export function AppLayout({
               variant="ghost"
               size="sm"
               onClick={toggle}
-              className="text-primary-foreground hover:bg-foreground/10 hover:text-primary-foreground"
+              aria-label="切换主题 / สลับธีม"
               title="切换主题 / สลับธีม"
+              className="h-9 w-9 rounded-full border border-[color:var(--theme-toggle-border)] bg-[color:var(--theme-toggle-bg)] p-0 text-[color:var(--theme-toggle-ink)] transition-colors hover:bg-[color:var(--theme-toggle-bg-hover)] hover:text-[color:var(--theme-toggle-ink)] active:bg-[color:var(--theme-toggle-bg-active)] focus-visible:ring-2 focus-visible:ring-[color:var(--theme-toggle-ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>

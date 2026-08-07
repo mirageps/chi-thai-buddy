@@ -173,20 +173,21 @@ function HomePage() {
                   }`}
                   className="flex min-h-[44px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
                   style={{
-                    borderColor: `color-mix(in oklab, var(--class-${c.cls}) 45%, var(--border))`,
+                    backgroundColor: `var(--class-${c.cls})`,
+                    borderColor: `color-mix(in oklab, var(--class-${c.cls}) 86%, #000)`,
                   }}
                 >
                   <span
                     className="font-thai text-lg leading-[1.4]"
-                    style={{ color: "var(--consonant)" }}
+                    style={{ color: "var(--class-ink)" }}
                   >
                     {c.char}
                   </span>
                   <span
                     className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
                     style={{
-                      color: `var(--class-${c.cls}-ink)`,
-                      backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 12%, var(--card))`,
+                      color: "var(--class-ink)",
+                      backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 55%, var(--card))`,
                     }}
                   >
                     {c.cls === "mid" ? "中" : c.cls === "high" ? "高" : "低"}
@@ -228,20 +229,21 @@ function HomePage() {
                     aria-label={`${v.form} ${v.zhName} · ${l.zh}`}
                     className="flex min-h-[44px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
                     style={{
-                      borderColor: `color-mix(in oklab, var(${l.colorVar}) 45%, var(--border))`,
+                      backgroundColor: `var(${l.colorVar})`,
+                      borderColor: `color-mix(in oklab, var(${l.colorVar}) 86%, #000)`,
                     }}
                   >
                     <span
                       className="font-thai text-base leading-[1.6]"
-                      style={{ color: "var(--vowel)" }}
+                      style={{ color: "var(--class-ink)" }}
                     >
                       {v.form}
                     </span>
                     <span
                       className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
                       style={{
-                        color: `var(${l.colorVar}-ink)`,
-                        backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 12%, var(--card))`,
+                        color: "var(--class-ink)",
+                        backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 55%, var(--card))`,
                       }}
                     >
                       {k === "short" ? "短" : k === "long" ? "长" : "复"}
@@ -308,13 +310,13 @@ function HomePage() {
               >
                 <span
                   className="font-thai min-w-8 text-lg leading-[1.5]"
-                  style={{ color: "var(--tone)" }}
+                  style={{ color: "var(--foreground)" }}
                 >
                   {t.mark}
                 </span>
                 <span className="font-semibold">{t.zhName}</span>
                 <span className="font-thai text-muted-foreground">{t.name}</span>
-                <span className="ml-auto" style={{ color: "var(--tone)" }}>
+                <span className="ml-auto" style={{ color: "var(--text-secondary)" }}>
                   {t.arrow}
                 </span>
               </div>

@@ -22,11 +22,12 @@ interface Props {
   mode: Mode;
 }
 
-function classColor(cls: "mid" | "high" | "low") {
-  // Flashcard keeps its own frozen palette (see --fc-* tokens in styles.css).
-  if (cls === "mid") return "bg-[color:var(--fc-class-mid)] text-white";
-  if (cls === "high") return "bg-[color:var(--fc-class-high)] text-white";
-  return "bg-[color:var(--fc-class-low)] text-white";
+// Flashcard visuals come from the --fc-* design tokens in styles.css.
+function classChipStyle(cls: "mid" | "high" | "low"): React.CSSProperties {
+  return {
+    backgroundColor: `var(--fc-class-${cls})`,
+    color: "var(--fc-class-ink)",
+  };
 }
 
 export function Flashcard({ mode }: Props) {
@@ -81,14 +82,14 @@ export function Flashcard({ mode }: Props) {
     setFlipped(false);
   };
 
-  const accent =
+  const surfaceVar =
     mode === "consonants"
-      ? "from-[color:var(--fc-consonant)]"
+      ? "--fc-consonant"
       : mode === "vowels"
-        ? "from-[color:var(--fc-vowel)]"
+        ? "--fc-vowel"
         : mode === "finals"
-          ? "from-[color:var(--fc-final)]"
-          : "from-[color:var(--fc-tone)]";
+          ? "--fc-final"
+          : "--fc-tone";
 
   return (
     <div className="flex flex-col items-center gap-6">
@@ -116,9 +117,14 @@ export function Flashcard({ mode }: Props) {
 
       <Card
         onClick={() => setFlipped((f) => !f)}
-        className={`relative flex min-h-[22rem] w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden border-[color:var(--fc-border)] bg-gradient-to-br ${accent} to-[color:var(--fc-surface)] px-6 py-10 shadow-[var(--fc-shadow)] transition-transform hover:scale-[1.02]`}
+        className="relative flex min-h-[22rem] w-full max-w-md cursor-pointer flex-col items-center justify-center overflow-hidden border px-6 py-10 shadow-[var(--fc-shadow)] transition-transform hover:scale-[1.02]"
+        style={{
+          backgroundColor: `var(${surfaceVar})`,
+          borderColor: `color-mix(in oklab, var(${surfaceVar}) 87%, #000)`,
+          color: "var(--fc-text-primary)",
+        }}
       >
-        <div className="absolute right-3 top-3 text-xs text-white/70">
+        <div className="absolute right-3 top-3 text-xs" style={{ color: "var(--fc-text-muted)" }}>
           <RotateCw className="h-4 w-4" />
         </div>
 
@@ -145,9 +151,9 @@ export function Flashcard({ mode }: Props) {
 
       {mode === "consonants" && (
         <div className="flex flex-wrap justify-center gap-2 text-xs">
-          <Badge className="bg-[color:var(--fc-class-mid)] text-white">中辅音 อักษรกลาง</Badge>
-          <Badge className="bg-[color:var(--fc-class-high)] text-white">高辅音 อักษรสูง</Badge>
-          <Badge className="bg-[color:var(--fc-class-low)] text-white">低辅音 อักษรต่ำ</Badge>
+          <Badge style={classChipStyle("mid")}>中辅音 อักษรกลาง</Badge>
+          <Badge style={classChipStyle("high")}>高辅音 อักษรสูง</Badge>
+          <Badge style={classChipStyle("low")}>低辅音 อักษรต่ำ</Badge>
         </div>
       )}
     </div>
@@ -158,9 +164,9 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   if (mode === "consonants") {
     const c = item as Consonant;
     return (
-      <div className="flex flex-col items-center gap-6 text-white">
-        <span className="font-thai text-9xl font-bold leading-[1.4] drop-shadow-lg">{c.char}</span>
-        <span className={`rounded-full px-3 py-1 text-xs ${classColor(c.cls)}`}>
+      <div className="flex flex-col items-center gap-6" style={{ color: "var(--fc-text-primary)" }}>
+        <span className="font-thai text-9xl font-bold leading-[1.4]">{c.char}</span>
+        <span className="rounded-full px-3 py-1 text-xs" style={classChipStyle(c.cls)}>
           {classLabel(c.cls).zh}
         </span>
       </div>
@@ -169,20 +175,29 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   if (mode === "vowels") {
     const v = item as Vowel;
     return (
-      <div className="flex flex-col items-center gap-6 text-white">
-        <span className="font-thai text-8xl font-bold leading-[1.4] drop-shadow-lg">{v.form}</span>
-        <span className="text-sm opacity-80">点击查看发音</span>
+      <div className="flex flex-col items-center gap-6" style={{ color: "var(--fc-text-primary)" }}>
+        <span className="font-thai text-8xl font-bold leading-[1.4]">{v.form}</span>
+        <span className="text-sm" style={{ color: "var(--fc-text-muted)" }}>点击查看发音</span>
       </div>
     );
   }
   if (mode === "finals") {
     const f = item as FinalGroup;
     return (
-      <div className="flex flex-col items-center gap-6 px-6 text-center text-white">
-        <span className="font-thai text-6xl font-bold leading-[1.4] drop-shadow-lg">
+      <div
+        className="flex flex-col items-center gap-6 px-6 text-center"
+        style={{ color: "var(--fc-text-primary)" }}
+      >
+        <span className="font-thai text-6xl font-bold leading-[1.4]">
           {f.thName}
         </span>
-        <span className="rounded-full bg-white/20 px-3 py-1 text-sm">
+        <span
+          className="rounded-full px-3 py-1 text-sm"
+          style={{
+            backgroundColor: "color-mix(in oklab, var(--fc-final) 80%, #fff)",
+            color: "var(--fc-text-secondary)",
+          }}
+        >
           {f.zhName}
           {f.ipa ? ` · ${f.ipa}` : ""}
         </span>
@@ -191,8 +206,8 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
   }
   const t = item as Tone;
   return (
-    <div className="flex flex-col items-center gap-6 text-white">
-      <span className="font-thai text-8xl font-bold leading-[1.4] drop-shadow-lg">
+    <div className="flex flex-col items-center gap-6" style={{ color: "var(--fc-text-primary)" }}>
+      <span className="font-thai text-8xl font-bold leading-[1.4]">
         ก{t.symbol}
       </span>
       <span className="text-4xl">{t.arrow}</span>
@@ -204,12 +219,19 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
   if (mode === "consonants") {
     const c = item as Consonant;
     return (
-      <div className="flex flex-col items-center gap-2 px-6 text-center text-white">
+      <div
+        className="flex flex-col items-center gap-2 px-6 text-center"
+        style={{ color: "var(--fc-text-secondary)" }}
+      >
         <div className="font-thai text-4xl leading-[1.5]">{c.name}</div>
-        <div className="text-sm italic opacity-80">{c.romanized}</div>
-        <div className="mt-2 text-2xl font-semibold">{c.zhMeaning}</div>
-        <div className="text-sm opacity-90">发音：{c.zhSound}</div>
-        <div className={`mt-3 rounded-full px-3 py-1 text-xs ${classColor(c.cls)}`}>
+        <div className="text-sm italic" style={{ color: "var(--fc-text-muted)" }}>
+          {c.romanized}
+        </div>
+        <div className="mt-2 text-2xl font-semibold" style={{ color: "var(--fc-text-primary)" }}>
+          {c.zhMeaning}
+        </div>
+        <div className="text-sm">发音：{c.zhSound}</div>
+        <div className="mt-3 rounded-full px-3 py-1 text-xs" style={classChipStyle(c.cls)}>
           {classLabel(c.cls).zh} · {classLabel(c.cls).th}
         </div>
       </div>
@@ -218,11 +240,16 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
   if (mode === "vowels") {
     const v = item as Vowel;
     return (
-      <div className="flex flex-col items-center gap-2 text-center text-white">
-        <div className="text-3xl font-bold">{v.zhName}</div>
-        <div className="font-thai text-2xl leading-[1.5] opacity-90">示例：{v.render("ก")}</div>
+      <div
+        className="flex flex-col items-center gap-2 text-center"
+        style={{ color: "var(--fc-text-secondary)" }}
+      >
+        <div className="text-3xl font-bold" style={{ color: "var(--fc-text-primary)" }}>
+          {v.zhName}
+        </div>
+        <div className="font-thai text-2xl leading-[1.5]">示例：{v.render("ก")}</div>
         <div className="text-lg">发音：{v.zhSound}</div>
-        <div className="text-xs opacity-80">
+        <div className="text-xs" style={{ color: "var(--fc-text-muted)" }}>
           {v.length === "short" ? "短元音 สระเสียงสั้น" : "长元音 สระเสียงยาว"}
         </div>
       </div>
@@ -231,10 +258,15 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
   if (mode === "finals") {
     const f = item as FinalGroup;
     return (
-      <div className="flex flex-col items-center gap-2 px-6 text-center text-white">
-        <div className="text-2xl font-bold">{f.zhName}</div>
-        <div className="font-thai text-xl leading-[1.5] opacity-90">{f.thName}</div>
-        <div className="text-sm opacity-90">{f.desc}</div>
+      <div
+        className="flex flex-col items-center gap-2 px-6 text-center"
+        style={{ color: "var(--fc-text-secondary)" }}
+      >
+        <div className="text-2xl font-bold" style={{ color: "var(--fc-text-primary)" }}>
+          {f.zhName}
+        </div>
+        <div className="font-thai text-xl leading-[1.5]">{f.thName}</div>
+        <div className="text-sm">{f.desc}</div>
         {f.consonants.length > 0 && (
           <div className="font-thai text-lg leading-[1.5]">
             辅音：{f.consonants.join(" ")}
@@ -244,7 +276,8 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
           {f.examples.map((ex) => (
             <span
               key={ex.thai}
-              className="rounded-full bg-white/20 px-2 py-0.5"
+              className="rounded-full px-2 py-0.5"
+              style={{ backgroundColor: "color-mix(in oklab, var(--fc-final) 80%, #fff)" }}
             >
               <span className="font-thai">{ex.thai}</span> · {ex.zh}
             </span>
@@ -255,9 +288,14 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
   }
   const t = item as Tone;
   return (
-    <div className="flex flex-col items-center gap-2 text-center text-white">
-      <div className="text-3xl font-bold">{t.zhName}</div>
-      <div className="font-thai text-xl leading-[1.5] opacity-90">{t.name}</div>
+    <div
+      className="flex flex-col items-center gap-2 text-center"
+      style={{ color: "var(--fc-text-secondary)" }}
+    >
+      <div className="text-3xl font-bold" style={{ color: "var(--fc-text-primary)" }}>
+        {t.zhName}
+      </div>
+      <div className="font-thai text-xl leading-[1.5]">{t.name}</div>
       <div className="max-w-xs text-sm">{t.zhDesc}</div>
       <div className="mt-2 text-4xl">{t.arrow}</div>
     </div>
