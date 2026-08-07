@@ -187,7 +187,7 @@ function HomePage() {
                     className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
                     style={{
                       color: "var(--class-ink)",
-                      backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 80%, #fff)`,
+                      backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 55%, var(--card))`,
                     }}
                   >
                     {c.cls === "mid" ? "中" : c.cls === "high" ? "高" : "低"}
@@ -243,7 +243,7 @@ function HomePage() {
                       className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
                       style={{
                         color: "var(--class-ink)",
-                        backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 80%, #fff)`,
+                        backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 55%, var(--card))`,
                       }}
                     >
                       {k === "short" ? "短" : k === "long" ? "长" : "复"}
