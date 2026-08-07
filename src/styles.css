@@ -75,6 +75,8 @@
   --color-surface-secondary: var(--surface-secondary);
   --color-final: var(--final);
   --color-final-foreground: var(--final-foreground);
+  --color-text-secondary: var(--text-secondary);
+  --color-syllable-heading: var(--syllable-heading);
   --font-thai: "Sarabun", "Noto Sans Thai", "Leelawadee UI", "Tahoma", system-ui, sans-serif;
   --font-cn: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
 }
@@ -83,25 +85,29 @@
   --radius: 0.625rem;
   /* ===== Single source of truth: warm language-learning palette (light) ===== */
   --background: #FAF7F5;
-  --foreground: #344054;
+  --foreground: #1F2937;
   --card: #FFFDFC;
-  --card-foreground: #344054;
+  --card-foreground: #1F2937;
   --surface-secondary: #F3EEEA;
   --popover: #FFFDFC;
-  --popover-foreground: #344054;
+  --popover-foreground: #1F2937;
   --primary: #B86F5D;
   --primary-foreground: #FFFDFC;
   --secondary: #F3EEEA;
-  --secondary-foreground: #344054;
+  --secondary-foreground: #374151;
   --muted: #F1ECE8;
-  --muted-foreground: #7A7280;
+  --muted-foreground: #4B5563;
   --accent: #F0E3DD;
-  --accent-foreground: #344054;
+  --accent-foreground: #1F2937;
   --destructive: #B4483C;
   --destructive-foreground: #FFFDFC;
   --border: #E7DFDA;
   --input: #DED5CF;
   --ring: #B86F5D;
+  /* text scale (light) */
+  --text-secondary: #374151;
+  /* section heading for 拼音节 / ประสมพยางค์ */
+  --syllable-heading: #527A9B;
   /* learning-section accents (not flashcard) */
   --consonant: #B0644F;
   --consonant-foreground: #FFFDFC;
@@ -115,7 +121,8 @@
   --class-mid: #BDE0FE;
   --class-high: #FFD3DB;
   --class-low: #E6ECCC;
-  --class-foreground: #344054;
+  --class-foreground: #1F2937;
+  --class-ink: #1F2937;
   --class-mid-ink: #3F6DA8;
   --class-high-ink: #B0576B;
   --class-low-ink: #6B7D41;
@@ -123,18 +130,21 @@
   --gradient-warm: linear-gradient(135deg, #E3B489 0%, #B86F5D 100%);
   --shadow-soft: 0 6px 20px -8px rgb(52 64 84 / 0.18);
   --shadow-card: 0 2px 10px -3px rgb(52 64 84 / 0.10);
-  /* ===== Flashcard-only tokens: frozen at pre-theme values (do not restyle) ===== */
-  --fc-surface: oklch(0.995 0.008 85);
-  --fc-foreground: oklch(0.22 0.03 220);
-  --fc-border: oklch(0.88 0.02 80);
-  --fc-shadow: 0 4px 20px -6px oklch(0.22 0.03 220 / 0.15);
-  --fc-consonant: oklch(0.55 0.14 25);
-  --fc-vowel: oklch(0.58 0.13 145);
-  --fc-tone: oklch(0.55 0.16 280);
-  --fc-final: oklch(0.63 0.16 60);
-  --fc-class-mid: oklch(0.6 0.14 240);
-  --fc-class-high: oklch(0.62 0.18 15);
-  --fc-class-low: oklch(0.6 0.15 150);
+  /* ===== Flashcard tokens (flat pastel surfaces, dark-grey ink) ===== */
+  --fc-consonant: #FADCD9;
+  --fc-vowel: #DCEBCF;
+  --fc-final: #FBE3CE;
+  --fc-tone: #DEE3F7;
+  --fc-syllable-from: #F8DCCF;
+  --fc-syllable-to: #EDBFAE;
+  --fc-text-primary: #1F2937;
+  --fc-text-secondary: #374151;
+  --fc-text-muted: #4B5563;
+  --fc-shadow: 0 4px 18px -8px rgb(31 41 55 / 0.18);
+  --fc-class-mid: #BDE0FE;
+  --fc-class-high: #FFD3DB;
+  --fc-class-low: #E6ECCC;
+  --fc-class-ink: #1F2937;
   --chart-1: #B86F5D;
   --chart-2: #6E8C5A;
   --chart-3: #3F6DA8;
@@ -152,25 +162,28 @@
 
 .dark {
   --background: #1D1B2A;
-  --foreground: #FFF9F7;
+  --foreground: #F1F5F9;
   --card: #292638;
-  --card-foreground: #FFF9F7;
+  --card-foreground: #F1F5F9;
   --surface-secondary: #332F44;
   --popover: #292638;
-  --popover-foreground: #FFF9F7;
+  --popover-foreground: #F1F5F9;
   --primary: #D58B78;
   --primary-foreground: #241F2C;
   --secondary: #332F44;
-  --secondary-foreground: #FFF9F7;
+  --secondary-foreground: #E5E7EB;
   --muted: #322E42;
-  --muted-foreground: #B8AFBF;
+  --muted-foreground: #CBD5E1;
   --accent: #3A3448;
-  --accent-foreground: #FFF9F7;
+  --accent-foreground: #F1F5F9;
   --destructive: #D9736A;
   --destructive-foreground: #241F2C;
   --border: #3A3549;
   --input: #423C53;
   --ring: #D58B78;
+  /* text scale (dark) */
+  --text-secondary: #E5E7EB;
+  --syllable-heading: #8FB6D9;
   --consonant: #D58B78;
   --consonant-foreground: #241F2C;
   --vowel: #9CBE86;
@@ -183,6 +196,7 @@
   --class-high: #965E69;
   --class-low: #66845F;
   --class-foreground: #F1F5F9;
+  --class-ink: #F1F5F9;
   --class-mid-ink: #9DB4DA;
   --class-high-ink: #DBA6B1;
   --class-low-ink: #AECB9F;
@@ -190,18 +204,21 @@
   --gradient-warm: linear-gradient(135deg, #6E5340 0%, #8A5546 100%);
   --shadow-soft: 0 6px 20px -8px rgb(0 0 0 / 0.55);
   --shadow-card: 0 2px 10px -3px rgb(0 0 0 / 0.4);
-  /* Flashcard-only tokens: frozen at pre-theme dark values */
-  --fc-surface: oklch(0.208 0.042 265.755);
-  --fc-foreground: oklch(0.984 0.003 247.858);
-  --fc-border: oklch(1 0 0 / 10%);
-  --fc-shadow: 0 4px 20px -6px oklch(0 0 0 / 0.5);
-  --fc-consonant: oklch(0.7 0.15 25);
-  --fc-vowel: oklch(0.72 0.14 145);
-  --fc-tone: oklch(0.72 0.15 280);
-  --fc-final: oklch(0.75 0.16 65);
-  --fc-class-mid: oklch(0.7 0.15 240);
-  --fc-class-high: oklch(0.72 0.18 15);
-  --fc-class-low: oklch(0.72 0.15 150);
+  /* Flashcard tokens (dark mode: mid-tone tinted surfaces, dark-grey ink) */
+  --fc-consonant: #BF838F;
+  --fc-vowel: #87AC7D;
+  --fc-final: #C19072;
+  --fc-tone: #758BC0;
+  --fc-syllable-from: #C89A80;
+  --fc-syllable-to: #BF838F;
+  --fc-text-primary: #26313D;
+  --fc-text-secondary: #414B56;
+  --fc-text-muted: #4B5563;
+  --fc-shadow: 0 6px 18px -8px rgb(0 0 0 / 0.45);
+  --fc-class-mid: #BDE0FE;
+  --fc-class-high: #FFD3DB;
+  --fc-class-low: #E6ECCC;
+  --fc-class-ink: #26313D;
   --chart-1: #D58B78;
   --chart-2: #9CBE86;
   --chart-3: #9DB4DA;
