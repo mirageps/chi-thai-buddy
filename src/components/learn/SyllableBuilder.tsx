@@ -66,11 +66,22 @@ export function SyllableBuilder() {
   return (
     <div className="flex flex-col gap-6">
       {/* Preview */}
-      <Card className="flex flex-col items-center gap-4 bg-[image:var(--gradient-hero)] p-8 text-primary-foreground shadow-[var(--shadow-soft)]">
-        <p className="text-xs uppercase tracking-widest opacity-80">
+      <Card
+        className="flex flex-col items-center gap-4 border p-8 shadow-[var(--fc-shadow)]"
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg, var(--fc-syllable-from) 0%, var(--fc-syllable-to) 100%)",
+          borderColor: "color-mix(in oklab, var(--fc-syllable-to) 87%, #000)",
+          color: "var(--fc-text-secondary)",
+        }}
+      >
+        <p className="text-xs uppercase tracking-widest" style={{ color: "var(--fc-text-muted)" }}>
           你的音节 / พยางค์ของคุณ
         </p>
-        <div className="font-thai text-8xl font-bold leading-[1.4] drop-shadow-lg py-4">
+        <div
+          className="font-thai py-4 text-8xl font-bold leading-[1.4]"
+          style={{ color: "var(--fc-text-primary)" }}
+        >
           {syllable || "—"}
         </div>
         <Button
@@ -99,7 +110,13 @@ export function SyllableBuilder() {
           </Badge>
         </div>
         {!composed.supported && composed.warnings.length > 0 && (
-          <div className="rounded-md bg-black/20 px-3 py-2 text-center text-[11px] leading-relaxed">
+          <div
+            className="rounded-md px-3 py-2 text-center text-[11px] leading-relaxed"
+            style={{
+              backgroundColor: "color-mix(in oklab, var(--fc-syllable-from) 80%, #fff)",
+              color: "var(--fc-text-secondary)",
+            }}
+          >
             {composed.warnings.map((w, i) => (
               <div key={i} className="font-thai">{w}</div>
             ))}
