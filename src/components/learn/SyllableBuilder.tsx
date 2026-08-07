@@ -21,6 +21,13 @@ import {
   toneMarkFromIndex,
 } from "@/lib/syllable";
 
+/** Chip on the syllable preview card: tinted from the card family, dark-grey ink. */
+const CHIP_STYLE: React.CSSProperties = {
+  backgroundColor: "color-mix(in oklab, var(--fc-syllable-from) 65%, #fff)",
+  borderColor: "color-mix(in oklab, var(--fc-syllable-to) 87%, #000)",
+  color: "var(--fc-text-secondary)",
+};
+
 export function SyllableBuilder() {
   const [cIdx, setCIdx] = useState(0); // ก
   const [vIdx, setVIdx] = useState(1); // า
