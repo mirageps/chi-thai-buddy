@@ -108,6 +108,12 @@
   --text-secondary: #374151;
   /* section heading for 拼音节 / ประสมพยางค์ */
   --syllable-heading: #527A9B;
+  /* light/dark toggle button */
+  --theme-toggle-ink: #1F2937;
+  --theme-toggle-bg: rgb(31 41 55 / 0.08);
+  --theme-toggle-bg-hover: rgb(31 41 55 / 0.16);
+  --theme-toggle-bg-active: rgb(31 41 55 / 0.24);
+  --theme-toggle-border: rgb(31 41 55 / 0.18);
   /* learning-section accents (not flashcard) */
   --consonant: #B0644F;
   --consonant-foreground: #FFFDFC;
@@ -184,6 +190,11 @@
   /* text scale (dark) */
   --text-secondary: #E5E7EB;
   --syllable-heading: #8FB6D9;
+  --theme-toggle-ink: #F1F5F9;
+  --theme-toggle-bg: rgb(241 245 249 / 0.12);
+  --theme-toggle-bg-hover: rgb(241 245 249 / 0.22);
+  --theme-toggle-bg-active: rgb(241 245 249 / 0.3);
+  --theme-toggle-border: rgb(241 245 249 / 0.28);
   --consonant: #D58B78;
   --consonant-foreground: #241F2C;
   --vowel: #9CBE86;
