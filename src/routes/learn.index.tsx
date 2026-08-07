@@ -155,7 +155,7 @@ function LearnPage() {
               th="ประสมพยางค์"
               zh="拼音节"
               desc="选择辅音 + 元音 + 韵尾 + 声调，实时拼出泰语音节。"
-              colorVar="--primary"
+              colorVar="--syllable-heading"
               emphasis
             />
           </Link>
