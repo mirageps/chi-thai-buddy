@@ -94,18 +94,18 @@ export function SyllableBuilder() {
           播放发音 / ฟังเสียง
         </Button>
         <div className="flex flex-wrap justify-center gap-2 text-xs">
-          <Badge variant="secondary" className="font-thai">
+          <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>
             {consonant.char} · {consonant.zhSound}
           </Badge>
-          <Badge variant="secondary" className="font-thai">
+          <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>
             {vowel.form} · {vowel.zhSound}
           </Badge>
           {effectiveFinalChar && (
-            <Badge variant="secondary" className="font-thai">
+            <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>
               {effectiveFinalChar} · {finalGroup?.short}
             </Badge>
           )}
-          <Badge variant="secondary" className="font-thai">
+          <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>
             {toneShape.thLabel} · {toneShape.zhLabel}
           </Badge>
         </div>
