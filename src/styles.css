@@ -114,6 +114,8 @@
   --theme-toggle-bg-hover: rgb(31 41 55 / 0.16);
   --theme-toggle-bg-active: rgb(31 41 55 / 0.24);
   --theme-toggle-border: rgb(31 41 55 / 0.18);
+  /* hero band ink */
+  --hero-ink: #FFFDFC;
   /* learning-section accents (not flashcard) */
   --consonant: #B0644F;
   --consonant-foreground: #FFFDFC;
@@ -195,6 +197,7 @@
   --theme-toggle-bg-hover: rgb(241 245 249 / 0.22);
   --theme-toggle-bg-active: rgb(241 245 249 / 0.3);
   --theme-toggle-border: rgb(241 245 249 / 0.28);
+  --hero-ink: #F1F5F9;
   --consonant: #D58B78;
   --consonant-foreground: #241F2C;
   --vowel: #9CBE86;
