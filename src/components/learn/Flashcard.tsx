@@ -22,11 +22,12 @@ interface Props {
   mode: Mode;
 }
 
-function classColor(cls: "mid" | "high" | "low") {
-  // Flashcard keeps its own frozen palette (see --fc-* tokens in styles.css).
-  if (cls === "mid") return "bg-[color:var(--fc-class-mid)] text-white";
-  if (cls === "high") return "bg-[color:var(--fc-class-high)] text-white";
-  return "bg-[color:var(--fc-class-low)] text-white";
+// Flashcard visuals come from the --fc-* design tokens in styles.css.
+function classChipStyle(cls: "mid" | "high" | "low"): React.CSSProperties {
+  return {
+    backgroundColor: `var(--fc-class-${cls})`,
+    color: "var(--fc-class-ink)",
+  };
 }
 
 export function Flashcard({ mode }: Props) {
