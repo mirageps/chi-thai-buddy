@@ -24,8 +24,9 @@ export function AppLayout({
               variant="ghost"
               size="sm"
               onClick={toggle}
-              className="text-primary-foreground hover:bg-foreground/10 hover:text-primary-foreground"
+              aria-label="切换主题 / สลับธีม"
               title="切换主题 / สลับธีม"
+              className="h-9 w-9 rounded-full border border-[color:var(--theme-toggle-border)] bg-[color:var(--theme-toggle-bg)] p-0 text-[color:var(--theme-toggle-ink)] transition-colors hover:bg-[color:var(--theme-toggle-bg-hover)] hover:text-[color:var(--theme-toggle-ink)] active:bg-[color:var(--theme-toggle-bg-active)] focus-visible:ring-2 focus-visible:ring-[color:var(--theme-toggle-ink)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
