@@ -163,15 +163,23 @@ function HomePage() {
               </span>
             ))}
           </div>
+          {/* Pinyin-approximation disclaimer for the initial-sound labels */}
+          <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">
+            发音标注参考汉语拼音，帮助初学者快速辨认，不代表完全相同的发音。
+            <br />
+            <span className="font-thai">
+              สัญลักษณ์เสียงอ้างอิงจากพินอินเพื่อช่วยให้ผู้เริ่มต้นจดจำ ไม่ได้หมายความว่าออกเสียงเหมือนกันทั้งหมด
+            </span>
+          </p>
           <ol className="grid grid-cols-5 gap-1.5 sm:grid-cols-8 lg:grid-cols-11">
             {homeConsonants.map((c) => (
               <li key={c.char}>
                 <div
                   title={`${c.name} · ${c.zhMeaning}`}
-                  aria-label={`${c.char} ${c.name} · ${c.zhMeaning} · ${
+                  aria-label={`${c.char} ${c.name} · ${c.initialSound} · ${c.zhMeaning} · ${
                     c.cls === "mid" ? "中辅音 อักษรกลาง" : c.cls === "high" ? "高辅音 อักษรสูง" : "低辅音 อักษรต่ำ"
                   }`}
-                  className="flex min-h-[44px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
+                  className="flex min-h-[48px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
                   style={{
                     backgroundColor: `var(--class-${c.cls})`,
                     borderColor: `color-mix(in oklab, var(--class-${c.cls}) 86%, #000)`,
@@ -183,14 +191,23 @@ function HomePage() {
                   >
                     {c.char}
                   </span>
-                  <span
-                    className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
-                    style={{
-                      color: "var(--class-ink)",
-                      backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 55%, var(--card))`,
-                    }}
-                  >
-                    {c.cls === "mid" ? "中" : c.cls === "high" ? "高" : "低"}
+                  <span className="mt-0.5 flex w-full items-center justify-center gap-1 leading-[1.4]">
+                    {/* initial consonant sound only (finals differ; shown in 韵尾 lesson) */}
+                    <span
+                      className="text-[9px] font-medium italic"
+                      style={{ color: "color-mix(in oklab, var(--class-ink) 65%, transparent)" }}
+                    >
+                      {c.initialSound}
+                    </span>
+                    <span
+                      className="rounded px-1 text-[9px] font-semibold"
+                      style={{
+                        color: "var(--class-ink)",
+                        backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 55%, var(--card))`,
+                      }}
+                    >
+                      {c.cls === "mid" ? "中" : c.cls === "high" ? "高" : "低"}
+                    </span>
                   </span>
                 </div>
               </li>
