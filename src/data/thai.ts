@@ -66,40 +66,42 @@ export interface Vowel {
   romanized: string;
   zhName: string;
   zhSound: string;
+  ipa: string;          // 音标 (IPA-like) 用于发音说明
+  forms: string;        // 书写形式 (带 อ) เช่น "อะ / อั"
   length: "short" | "long";
   // How to render with a consonant (● represents consonant)
   render: (c: string) => string;
 }
 
 export const VOWELS: Vowel[] = [
-  { form: "◌ะ", romanized: "a", zhName: "短 a", zhSound: "阿（短促）", length: "short", render: (c) => `${c}ะ` },
-  { form: "◌า", romanized: "aa", zhName: "长 a", zhSound: "啊（拉长）", length: "long", render: (c) => `${c}า` },
-  { form: "◌ิ", romanized: "i", zhName: "短 i", zhSound: "衣（短）", length: "short", render: (c) => `${c}ิ` },
-  { form: "◌ี", romanized: "ii", zhName: "长 i", zhSound: "衣（长）", length: "long", render: (c) => `${c}ี` },
-  { form: "◌ึ", romanized: "ue", zhName: "短 ɯ", zhSound: "近似'呃'（短）", length: "short", render: (c) => `${c}ึ` },
-  { form: "◌ื", romanized: "uee", zhName: "长 ɯ", zhSound: "近似'呃'（长）", length: "long", render: (c) => `${c}ือ` },
-  { form: "◌ุ", romanized: "u", zhName: "短 u", zhSound: "乌（短）", length: "short", render: (c) => `${c}ุ` },
-  { form: "◌ู", romanized: "uu", zhName: "长 u", zhSound: "乌（长）", length: "long", render: (c) => `${c}ู` },
-  { form: "เ◌ะ", romanized: "e", zhName: "短 e", zhSound: "诶（短）", length: "short", render: (c) => `เ${c}ะ` },
-  { form: "เ◌", romanized: "ee", zhName: "长 e", zhSound: "诶（长）", length: "long", render: (c) => `เ${c}` },
-  { form: "แ◌ะ", romanized: "ae", zhName: "短 ɛ", zhSound: "扁口'诶'（短）", length: "short", render: (c) => `แ${c}ะ` },
-  { form: "แ◌", romanized: "aae", zhName: "长 ɛ", zhSound: "扁口'诶'（长）", length: "long", render: (c) => `แ${c}` },
-  { form: "โ◌ะ", romanized: "o", zhName: "短 o", zhSound: "哦（短）", length: "short", render: (c) => `โ${c}ะ` },
-  { form: "โ◌", romanized: "oo", zhName: "长 o", zhSound: "哦（长）", length: "long", render: (c) => `โ${c}` },
-  { form: "เ◌าะ", romanized: "aw", zhName: "短 ɔ", zhSound: "喔（短）", length: "short", render: (c) => `เ${c}าะ` },
-  { form: "◌อ", romanized: "aaw", zhName: "长 ɔ", zhSound: "喔（长）", length: "long", render: (c) => `${c}อ` },
-  { form: "เ◌อะ", romanized: "oe", zhName: "短 ə", zhSound: "呃/儿（短）", length: "short", render: (c) => `เ${c}อะ` },
-  { form: "เ◌อ", romanized: "oee", zhName: "长 ə", zhSound: "呃/儿（长）", length: "long", render: (c) => `เ${c}อ` },
-  { form: "เ◌ียะ", romanized: "ia", zhName: "短 ia", zhSound: "呀（短）", length: "short", render: (c) => `เ${c}ียะ` },
-  { form: "เ◌ีย", romanized: "iaa", zhName: "长 ia", zhSound: "呀（长）", length: "long", render: (c) => `เ${c}ีย` },
-  { form: "เ◌ือะ", romanized: "uea", zhName: "短 ɯa", zhSound: "呃啊（短）", length: "short", render: (c) => `เ${c}ือะ` },
-  { form: "เ◌ือ", romanized: "ueaa", zhName: "长 ɯa", zhSound: "呃啊（长）", length: "long", render: (c) => `เ${c}ือ` },
-  { form: "◌ัวะ", romanized: "ua", zhName: "短 ua", zhSound: "哇（短）", length: "short", render: (c) => `${c}ัวะ` },
-  { form: "◌ัว", romanized: "uaa", zhName: "长 ua", zhSound: "哇（长）", length: "long", render: (c) => `${c}ัว` },
-  { form: "ไ◌", romanized: "ai", zhName: "复合 ai", zhSound: "爱", length: "short", render: (c) => `ไ${c}` },
-  { form: "ใ◌", romanized: "ai", zhName: "复合 ai (ใ)", zhSound: "爱（另一写法）", length: "short", render: (c) => `ใ${c}` },
-  { form: "เ◌า", romanized: "ao", zhName: "复合 ao", zhSound: "奥", length: "short", render: (c) => `เ${c}า` },
-  { form: "◌ำ", romanized: "am", zhName: "复合 am", zhSound: "安/唵", length: "short", render: (c) => `${c}ำ` },
+  { form: "◌ะ", romanized: "a", zhName: "短 a", zhSound: "阿（短促）", ipa: "a", forms: "อะ / อั", length: "short", render: (c) => `${c}ะ` },
+  { form: "◌า", romanized: "aa", zhName: "长 a", zhSound: "啊（拉长）", ipa: "aa", forms: "อา", length: "long", render: (c) => `${c}า` },
+  { form: "◌ิ", romanized: "i", zhName: "短 i", zhSound: "衣（短）", ipa: "i", forms: "อิ", length: "short", render: (c) => `${c}ิ` },
+  { form: "◌ี", romanized: "ii", zhName: "长 i", zhSound: "衣（长）", ipa: "ii", forms: "อี", length: "long", render: (c) => `${c}ี` },
+  { form: "◌ึ", romanized: "ue", zhName: "短 ɯ", zhSound: "近似'呃'（短）", ipa: "ʉ", forms: "อึ", length: "short", render: (c) => `${c}ึ` },
+  { form: "◌ื", romanized: "uee", zhName: "长 ɯ", zhSound: "近似'呃'（长）", ipa: "ʉʉ", forms: "อื / อือ", length: "long", render: (c) => `${c}ือ` },
+  { form: "◌ุ", romanized: "u", zhName: "短 u", zhSound: "乌（短）", ipa: "u", forms: "อุ", length: "short", render: (c) => `${c}ุ` },
+  { form: "◌ู", romanized: "uu", zhName: "长 u", zhSound: "乌（长）", ipa: "uu", forms: "อู", length: "long", render: (c) => `${c}ู` },
+  { form: "เ◌ะ", romanized: "e", zhName: "短 e", zhSound: "诶（短）", ipa: "e", forms: "เอะ / เอ็", length: "short", render: (c) => `เ${c}ะ` },
+  { form: "เ◌", romanized: "ee", zhName: "长 e", zhSound: "诶（长）", ipa: "ee", forms: "เอ", length: "long", render: (c) => `เ${c}` },
+  { form: "แ◌ะ", romanized: "ae", zhName: "短 ɛ", zhSound: "扁口'诶'（短）", ipa: "ɛ", forms: "แอะ / แอ็", length: "short", render: (c) => `แ${c}ะ` },
+  { form: "แ◌", romanized: "aae", zhName: "长 ɛ", zhSound: "扁口'诶'（长）", ipa: "ɛɛ", forms: "แอ", length: "long", render: (c) => `แ${c}` },
+  { form: "โ◌ะ", romanized: "o", zhName: "短 o", zhSound: "哦（短）", ipa: "o", forms: "โอะ", length: "short", render: (c) => `โ${c}ะ` },
+  { form: "โ◌", romanized: "oo", zhName: "长 o", zhSound: "哦（长）", ipa: "oo", forms: "โอ", length: "long", render: (c) => `โ${c}` },
+  { form: "เ◌าะ", romanized: "aw", zhName: "短 ɔ", zhSound: "喔（短）", ipa: "ɔ", forms: "เอาะ / อ็อ", length: "short", render: (c) => `เ${c}าะ` },
+  { form: "◌อ", romanized: "aaw", zhName: "长 ɔ", zhSound: "喔（长）", ipa: "ɔɔ", forms: "ออ", length: "long", render: (c) => `${c}อ` },
+  { form: "เ◌อะ", romanized: "oe", zhName: "短 ə", zhSound: "呃/儿（短）", ipa: "ə", forms: "เออะ / เอิ", length: "short", render: (c) => `เ${c}อะ` },
+  { form: "เ◌อ", romanized: "oee", zhName: "长 ə", zhSound: "呃/儿（长）", ipa: "əə", forms: "เออ / เอิ", length: "long", render: (c) => `เ${c}อ` },
+  { form: "เ◌ียะ", romanized: "ia", zhName: "短 ia", zhSound: "呀（短）", ipa: "ia", forms: "เอียะ", length: "short", render: (c) => `เ${c}ียะ` },
+  { form: "เ◌ีย", romanized: "iaa", zhName: "长 ia", zhSound: "呀（长）", ipa: "iaa", forms: "เอีย", length: "long", render: (c) => `เ${c}ีย` },
+  { form: "เ◌ือะ", romanized: "uea", zhName: "短 ɯa", zhSound: "呃啊（短）", ipa: "ʉa", forms: "เอือะ", length: "short", render: (c) => `เ${c}ือะ` },
+  { form: "เ◌ือ", romanized: "ueaa", zhName: "长 ɯa", zhSound: "呃啊（长）", ipa: "ʉaa", forms: "เอือ", length: "long", render: (c) => `เ${c}ือ` },
+  { form: "◌ัวะ", romanized: "ua", zhName: "短 ua", zhSound: "哇（短）", ipa: "ua", forms: "อัวะ", length: "short", render: (c) => `${c}ัวะ` },
+  { form: "◌ัว", romanized: "uaa", zhName: "长 ua", zhSound: "哇（长）", ipa: "uaa", forms: "อัว", length: "long", render: (c) => `${c}ัว` },
+  { form: "ไ◌", romanized: "ai", zhName: "复合 ai", zhSound: "爱", ipa: "ai", forms: "ไอ", length: "short", render: (c) => `ไ${c}` },
+  { form: "ใ◌", romanized: "ai", zhName: "复合 ai (ใ)", zhSound: "爱（另一写法）", ipa: "ai", forms: "ใอ", length: "short", render: (c) => `ใ${c}` },
+  { form: "เ◌า", romanized: "ao", zhName: "复合 ao", zhSound: "奥", ipa: "ao", forms: "เอา", length: "short", render: (c) => `เ${c}า` },
+  { form: "◌ำ", romanized: "am", zhName: "复合 am", zhSound: "安/唵", ipa: "am", forms: "อำ", length: "short", render: (c) => `${c}ำ` },
 ];
 
 export interface Tone {
