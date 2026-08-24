@@ -176,7 +176,7 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
     const v = item as Vowel;
     return (
       <div className="flex flex-col items-center gap-6" style={{ color: "var(--fc-text-primary)" }}>
-        <span className="font-thai text-8xl font-bold leading-[1.4]">{v.forms}</span>
+        <span className="font-thai text-center text-6xl font-bold leading-[1.4]">{v.forms}</span>
         <span className="text-sm" style={{ color: "var(--fc-text-muted)" }}>点击查看发音</span>
       </div>
     );
