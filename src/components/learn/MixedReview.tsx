@@ -68,7 +68,7 @@ function makeMixed(): MixedQ {
       .sort(() => Math.random() - 0.5);
     return {
       kind,
-      prompt: v.form,
+      prompt: v.render("อ"),
       speakText: v.render("อ"),
       answer: `${v.zhName} (${v.zhSound})`,
       options,

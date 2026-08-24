@@ -53,7 +53,7 @@ function makeQuestion(mode: Mode): Question {
       .map((v) => `${v.zhName} (${v.zhSound})`)
       .sort(() => Math.random() - 0.5);
     return {
-      prompt: correct.form,
+      prompt: correct.render("อ"),
       answer: `${correct.zhName} (${correct.zhSound})`,
       options,
       speakText: correct.render("อ"),

@@ -76,9 +76,9 @@ export function CategoryOverview({ cat }: { cat: Category }) {
                   className="rounded-lg border bg-card px-2 pb-1.5 pt-1"
                   style={{ borderColor: "color-mix(in oklab, var(--vowel) 35%, var(--border))" }}
                 >
-                  <div className="font-thai text-lg leading-[1.5]">{v.form}</div>
+                  <div className="font-thai text-lg leading-[1.5]">{v.forms}</div>
                   <div className="text-[11px] font-medium">{v.zhName}</div>
-                  <div className="text-[10px] text-muted-foreground">{v.zhSound}</div>
+                  <div className="text-[10px] text-muted-foreground">发音：{v.ipa}</div>
                 </div>
               ))}
             </div>
