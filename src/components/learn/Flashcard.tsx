@@ -176,7 +176,7 @@ function FrontFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone 
     const v = item as Vowel;
     return (
       <div className="flex flex-col items-center gap-6" style={{ color: "var(--fc-text-primary)" }}>
-        <span className="font-thai text-8xl font-bold leading-[1.4]">{v.form}</span>
+        <span className="font-thai text-8xl font-bold leading-[1.4]">{v.forms}</span>
         <span className="text-sm" style={{ color: "var(--fc-text-muted)" }}>点击查看发音</span>
       </div>
     );
@@ -247,8 +247,8 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
         <div className="text-3xl font-bold" style={{ color: "var(--fc-text-primary)" }}>
           {v.zhName}
         </div>
-        <div className="font-thai text-2xl leading-[1.5]">示例：{v.render("ก")}</div>
-        <div className="text-lg">发音：{v.zhSound}</div>
+        <div className="font-thai text-2xl leading-[1.5]">示例：{v.render("อ")}</div>
+        <div className="text-lg">发音：{v.ipa}</div>
         <div className="text-xs" style={{ color: "var(--fc-text-muted)" }}>
           {v.length === "short" ? "短元音 สระเสียงสั้น" : "长元音 สระเสียงยาว"}
         </div>
