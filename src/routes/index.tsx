@@ -235,35 +235,52 @@ function HomePage() {
               );
             })}
           </div>
+          {/* Pinyin-approximation disclaimer for the romanized labels */}
+          <p className="mb-2 text-[11px] leading-relaxed text-muted-foreground">
+            发音标注参考汉语拼音，帮助初学者快速辨认，不代表完全相同的发音。
+            <br />
+            <span className="font-thai">
+              สัญลักษณ์เสียงอ้างอิงจากพินอินเพื่อช่วยให้ผู้เริ่มต้นจดจำ ไม่ได้หมายความว่าออกเสียงเหมือนกันทั้งหมด
+            </span>
+          </p>
           <ol className="grid grid-cols-4 gap-1.5 sm:grid-cols-6">
             {homeVowels.map((v) => {
               const k = vowelKind(v);
               const l = VOWEL_KIND_LABEL[k];
+              const fullForm = v.render("อ");
               return (
                 <li key={v.form + v.romanized}>
                   <div
                     title={`${v.zhName} · ${v.zhSound}`}
-                    aria-label={`${v.form} ${v.zhName} · ${l.zh}`}
-                    className="flex min-h-[44px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
+                    aria-label={`${fullForm} ${v.zhName} · ${v.romanized} · ${l.zh}`}
+                    className="flex min-h-[48px] flex-col items-center justify-center rounded-lg border bg-card px-1 pb-1 pt-1.5"
                     style={{
                       backgroundColor: `var(${l.colorVar})`,
                       borderColor: `color-mix(in oklab, var(${l.colorVar}) 86%, #000)`,
                     }}
                   >
                     <span
-                      className="font-thai text-base leading-[1.6]"
+                      className="font-thai text-base leading-[1.4]"
                       style={{ color: "var(--class-ink)" }}
                     >
-                      {v.form}
+                      {fullForm}
                     </span>
-                    <span
-                      className="mt-0.5 rounded px-1 text-[9px] font-semibold leading-[1.4]"
-                      style={{
-                        color: "var(--class-ink)",
-                        backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 55%, var(--card))`,
-                      }}
-                    >
-                      {k === "short" ? "短" : k === "long" ? "长" : "复"}
+                    <span className="mt-0.5 flex w-full items-center justify-center gap-1 leading-[1.4]">
+                      <span
+                        className="text-[9px] font-medium italic"
+                        style={{ color: "color-mix(in oklab, var(--class-ink) 65%, transparent)" }}
+                      >
+                        {v.romanized}
+                      </span>
+                      <span
+                        className="rounded px-1 text-[9px] font-semibold"
+                        style={{
+                          color: "var(--class-ink)",
+                          backgroundColor: `color-mix(in oklab, var(${l.colorVar}) 55%, var(--card))`,
+                        }}
+                      >
+                        {k === "short" ? "短" : k === "long" ? "长" : "复"}
+                      </span>
                     </span>
                   </div>
                 </li>
