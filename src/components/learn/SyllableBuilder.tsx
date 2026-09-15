@@ -14,6 +14,7 @@ import {
 } from "@/data/finals";
 import { speakThai } from "@/lib/speech";
 import { useSpeechSupported } from "@/hooks/useSpeechSupported";
+import { useScrollDirection } from "@/hooks/useScrollDirection";
 import {
   composeThaiSyllable,
   vowelPatternByIndex,
@@ -33,6 +34,9 @@ export function SyllableBuilder() {
   const [vIdx, setVIdx] = useState(1); // า
   const [finalChar, setFinalChar] = useState<string | null>(null);
   const [tIdx, setTIdx] = useState(0); // no tone
+  const [openSection, setOpenSection] = useState<SectionId | null>(null);
+  const scrollState = useScrollDirection({ topThreshold: 120, delta: 12 });
+  const compactPreview = scrollState === "down";
 
   const consonant = CONSONANTS[cIdx];
   const vowel = VOWELS[vIdx];
@@ -74,7 +78,11 @@ export function SyllableBuilder() {
     <div className="flex flex-col gap-6">
       {/* Preview */}
       <Card
-        className="flex flex-col items-center gap-4 border p-8 shadow-[var(--fc-shadow)]"
+        className={`sticky top-2 z-20 flex items-center border shadow-[var(--fc-shadow)] transition-[padding,gap] duration-200 ${
+          compactPreview
+            ? "flex-row justify-center gap-3 px-4 py-2"
+            : "flex-col gap-3 px-4 py-5 sm:p-8"
+        }`}
         style={{
           backgroundImage:
             "linear-gradient(135deg, var(--fc-syllable-from) 0%, var(--fc-syllable-to) 100%)",
@@ -82,25 +90,32 @@ export function SyllableBuilder() {
           color: "var(--fc-text-secondary)",
         }}
       >
-        <p className="text-xs uppercase tracking-widest" style={{ color: "var(--fc-text-muted)" }}>
-          你的音节 / พยางค์ของคุณ
-        </p>
+        {!compactPreview && (
+          <p className="text-xs uppercase tracking-widest" style={{ color: "var(--fc-text-muted)" }}>
+            你的音节 / พยางค์ของคุณ
+          </p>
+        )}
         <div
-          className="font-thai py-4 text-8xl font-bold leading-[1.4]"
+          className={`font-thai font-bold leading-[1.4] transition-[font-size,padding] duration-200 ${
+            compactPreview ? "py-0 text-4xl" : "py-1 text-7xl sm:py-3 sm:text-8xl"
+          }`}
           style={{ color: "var(--fc-text-primary)" }}
         >
           {syllable || "—"}
         </div>
         <Button
-          size="sm"
+          size={compactPreview ? "icon" : "sm"}
           variant="secondary"
           onClick={() => speakThai(syllable)}
           disabled={!useSpeechSupported()}
+          aria-label="播放发音 / ฟังเสียง"
+          title="播放发音 / ฟังเสียง"
+          className={compactPreview ? "h-10 w-10 shrink-0 rounded-full" : ""}
         >
-          <Volume2 className="mr-1 h-4 w-4" />
-          播放发音 / ฟังเสียง
+          <Volume2 className={compactPreview ? "h-5 w-5" : "mr-1 h-4 w-4"} />
+          {!compactPreview && "播放发音 / ฟังเสียง"}
         </Button>
-        <div className="flex flex-wrap justify-center gap-2 text-xs">
+        {!compactPreview && <div className="flex flex-wrap justify-center gap-2 text-xs">
           <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>
             {consonant.char} · {consonant.zhSound}
           </Badge>
@@ -115,8 +130,8 @@ export function SyllableBuilder() {
           <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>
             {toneShape.thLabel} · {toneShape.zhLabel}
           </Badge>
-        </div>
-        {!composed.supported && composed.warnings.length > 0 && (
+        </div>}
+        {!compactPreview && !composed.supported && composed.warnings.length > 0 && (
           <div
             className="rounded-md px-3 py-2 text-center text-[11px] leading-relaxed"
             style={{
@@ -237,11 +252,14 @@ export function SyllableBuilder() {
           起始辅音 + 元音 + 韵尾（可选）+ 声调
         </span>
       </p>
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="flex flex-col gap-3">
         <CollapsibleSelector
+          id="consonant"
           title="① 辅音 / พยัญชนะต้น"
+          selected={<><span className="font-thai text-lg">{consonant.char}</span><span aria-hidden>✓</span></>}
           colorVar="--consonant"
-          defaultOpen
+          open={openSection === "consonant"}
+          onToggle={() => setOpenSection((current) => current === "consonant" ? null : "consonant")}
         >
           <SelectorGrid
             items={CONSONANTS.map((c, i) => ({
@@ -251,37 +269,54 @@ export function SyllableBuilder() {
               cls: c.cls,
             }))}
             selected={cIdx}
-            onSelect={setCIdx}
+            onSelect={(index) => {
+              setCIdx(index);
+              setOpenSection(null);
+            }}
             coded
           />
         </CollapsibleSelector>
         <CollapsibleSelector
+          id="vowel"
           title="② 元音 / สระ"
+          selected={<><span className="font-thai text-base">{vowel.form}</span><span aria-hidden>✓</span></>}
           colorVar="--vowel"
-          defaultOpen
+          open={openSection === "vowel"}
+          onToggle={() => setOpenSection((current) => current === "vowel" ? null : "vowel")}
         >
-          <SelectorGrid
-            items={VOWELS.map((v, i) => ({
-              key: i,
-              label: v.form,
-              sub: v.zhName,
-            }))}
+          <VowelSelector
             selected={vIdx}
-            onSelect={setVIdx}
+            onSelect={(index) => {
+              setVIdx(index);
+              setOpenSection(null);
+            }}
           />
         </CollapsibleSelector>
         <CollapsibleSelector
+          id="final"
           title="③ 韵尾 / ตัวสะกด（可选）"
+          selected={effectiveFinalChar ? <><span className="font-thai text-base">{finalGroup?.thName} · {effectiveFinalChar}</span><span aria-hidden>✓</span></> : <span>无 / ไม่มี</span>}
           colorVar="--final"
-          defaultOpen
+          open={openSection === "final"}
+          onToggle={() => setOpenSection((current) => current === "final" ? null : "final")}
         >
           <FinalSelector
             selected={effectiveFinalChar}
-            onSelect={setFinalChar}
+            onSelect={(char) => {
+              setFinalChar(char);
+              setOpenSection(null);
+            }}
             disabled={!vowelSupportsFinal}
           />
         </CollapsibleSelector>
-        <CollapsibleSelector title="④ 声调 / วรรณยุกต์" colorVar="--tone" defaultOpen>
+        <CollapsibleSelector
+          id="tone"
+          title="④ 声调 / วรรณยุกต์"
+          selected={tIdx === 0 ? <span>无 / ไม่มี</span> : <><span className="font-thai text-xl">{TONES[tIdx].symbol}</span><span aria-hidden>✓</span></>}
+          colorVar="--tone"
+          open={openSection === "tone"}
+          onToggle={() => setOpenSection((current) => current === "tone" ? null : "tone")}
+        >
           <SelectorGrid
             items={TONES.map((t, i) => ({
               key: i,
@@ -289,7 +324,10 @@ export function SyllableBuilder() {
               sub: `${t.zhName} ${t.arrow}`,
             }))}
             selected={tIdx}
-            onSelect={setTIdx}
+            onSelect={(index) => {
+              setTIdx(index);
+              setOpenSection(null);
+            }}
           />
         </CollapsibleSelector>
       </div>
@@ -366,32 +404,51 @@ function ExpandableDetailRow({
   );
 }
 
+type SectionId = "consonant" | "vowel" | "final" | "tone";
+
 function CollapsibleSelector({
+  id,
   title,
+  selected,
   colorVar,
-  defaultOpen,
+  open,
+  onToggle,
   children,
 }: {
+  id: SectionId;
   title: string;
+  selected: React.ReactNode;
   colorVar: string;
-  defaultOpen?: boolean;
+  open: boolean;
+  onToggle: () => void;
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(!!defaultOpen);
+  const triggerId = `${id}-selector-trigger`;
+  const panelId = `${id}-selector-panel`;
   return (
-    <Card className="flex flex-col gap-3 p-4 shadow-[var(--shadow-card)]">
-      <button
+    <Card className={`overflow-hidden shadow-[var(--shadow-card)] transition-colors ${open ? "border-current" : ""}`} style={open ? { color: `var(${colorVar})` } : undefined}>
+      <Button
+        id={triggerId}
         type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="flex items-center justify-between text-left text-sm font-semibold"
+        variant="ghost"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="grid min-h-12 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-none px-4 py-2 text-left hover:bg-muted/60"
         style={{ color: `var(${colorVar})` }}
       >
-        <span>{title}</span>
+        <span className="min-w-0 truncate text-sm font-semibold">{title}</span>
+        {!open && <span className="flex min-w-0 items-center gap-1.5 truncate text-xs font-medium text-foreground">{selected}</span>}
         <ChevronDown
-          className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+          className={`h-4 w-4 shrink-0 transition-transform ${open ? "rotate-180" : "-rotate-90"}`}
         />
-      </button>
-      {open && children}
+      </Button>
+      {open && (
+        <div id={panelId} role="region" aria-labelledby={triggerId} className="border-t border-border p-3 text-foreground sm:p-4">
+          {children}
+        </div>
+      )}
     </Card>
   );
 }
@@ -415,8 +472,8 @@ function SelectorGrid({
   coded?: boolean;
 }) {
   return (
-    <ScrollArea className="h-64">
-      <div className="grid grid-cols-4 gap-2 pr-3">
+    <ScrollArea className="h-72 sm:h-80">
+      <div className="grid grid-cols-3 gap-2 pr-3 min-[380px]:grid-cols-4 sm:grid-cols-6">
           {items.map((it) => {
             const active = it.key === selected;
             let bg = "";
@@ -426,10 +483,14 @@ function SelectorGrid({
               else bg = "border-l-4 border-l-[color:var(--class-low)]";
             }
             return (
-              <button
+              <Button
                 key={it.key}
+                type="button"
+                variant="outline"
                 onClick={() => onSelect(it.key)}
-                className={`font-thai flex flex-col items-center rounded-md border p-2 text-lg transition-colors ${bg} ${
+                aria-pressed={active}
+                aria-label={`${it.label}, ${it.sub}`}
+                className={`font-thai h-auto min-h-14 whitespace-normal flex-col gap-0 rounded-md p-2 text-lg transition-colors ${bg} ${
                   active
                     ? "border-primary bg-primary/10 ring-2 ring-primary"
                     : "hover:bg-muted"
@@ -440,11 +501,55 @@ function SelectorGrid({
                 <span className="font-cn mt-1 text-[10px] leading-tight text-muted-foreground">
                   {it.sub}
                 </span>
-              </button>
+              </Button>
             );
           })}
       </div>
     </ScrollArea>
+  );
+}
+
+function VowelSelector({
+  selected,
+  onSelect,
+}: {
+  selected: number;
+  onSelect: (index: number) => void;
+}) {
+  const groups = [
+    { label: "短元音 / สระเสียงสั้น", indices: VOWELS.map((_, index) => index).filter((index) => index < 18 && VOWELS[index].length === "short") },
+    { label: "长元音 / สระเสียงยาว", indices: VOWELS.map((_, index) => index).filter((index) => index < 18 && VOWELS[index].length === "long") },
+    { label: "复合与特殊 / สระประสมและรูปพิเศษ", indices: VOWELS.map((_, index) => index).filter((index) => index >= 18) },
+  ];
+
+  return (
+    <div className="flex max-h-[24rem] flex-col gap-4 overflow-y-auto pr-1">
+      {groups.map((group) => (
+        <section key={group.label} aria-label={group.label}>
+          <h3 className="mb-2 text-xs font-semibold text-muted-foreground">{group.label}</h3>
+          <div className="grid grid-cols-3 gap-2 min-[380px]:grid-cols-4 sm:grid-cols-6">
+            {group.indices.map((index) => {
+              const item = VOWELS[index];
+              const active = selected === index;
+              return (
+                <Button
+                  key={index}
+                  type="button"
+                  variant="outline"
+                  onClick={() => onSelect(index)}
+                  aria-pressed={active}
+                  aria-label={`${item.form}, ${item.zhName}`}
+                  className={`font-thai h-auto min-h-14 whitespace-normal flex-col gap-0 rounded-md p-2 text-lg ${active ? "border-vowel bg-vowel/10 ring-2 ring-vowel" : "hover:bg-muted"}`}
+                >
+                  <span>{item.form}</span>
+                  <span className="font-cn mt-1 text-[11px] leading-tight text-muted-foreground">{item.zhName}</span>
+                </Button>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
   );
 }
 
@@ -470,11 +575,13 @@ function FinalSelector({
         </div>
       )}
       {/* None option */}
-      <button
+      <Button
         type="button"
+        variant="outline"
         onClick={() => onSelect(null)}
         disabled={disabled}
-        className={`font-thai flex items-center justify-between rounded-md border p-3 text-left transition-colors ${
+        aria-pressed={selected === null}
+        className={`font-thai min-h-12 h-auto w-full justify-between whitespace-normal rounded-md p-3 text-left transition-colors ${
           selected === null
             ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
             : "hover:bg-muted"
@@ -490,7 +597,7 @@ function FinalSelector({
         <span className="font-cn text-[10px] text-muted-foreground">
           ไม่มีตัวสะกด
         </span>
-      </button>
+      </Button>
 
       <p className="font-cn text-[11px] leading-snug text-muted-foreground">
         按泰语韵尾类别选择音节末尾的辅音。不同字母在词尾可能有相同的发音。
@@ -521,15 +628,17 @@ function FinalSelector({
               const active = selected === c;
               const isPrimary = primaryChars.has(c);
               return (
-                <button
+                <Button
                   key={c}
                   type="button"
+                  variant="outline"
                   disabled={disabled}
                   onClick={(e) => {
                     e.preventDefault();
-                    onSelect(c);
+                    onSelect(active ? null : c);
                   }}
-                  className={`font-thai relative flex items-center justify-center rounded-md border p-2 text-lg transition-colors ${
+                  aria-pressed={active}
+                  className={`font-thai relative h-11 min-w-0 rounded-md p-2 text-lg transition-colors ${
                     active
                       ? "border-[color:var(--final)] bg-[color:var(--final)]/10 ring-2 ring-[color:var(--final)]"
                       : "hover:bg-muted"
@@ -549,7 +658,7 @@ function FinalSelector({
                       ·
                     </span>
                   )}
-                </button>
+                </Button>
               );
             })}
           </div>
