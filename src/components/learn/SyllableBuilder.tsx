@@ -293,6 +293,8 @@ export function SyllableBuilder() {
             )
           }
         />
+        </div>
+        )}
       </Card>
 
       {/* Selectors */}
