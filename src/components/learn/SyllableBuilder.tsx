@@ -34,6 +34,7 @@ export function SyllableBuilder() {
   const [finalChar, setFinalChar] = useState<string | null>(null);
   const [tIdx, setTIdx] = useState(0); // no tone
   const [openSection, setOpenSection] = useState<SectionId | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const speechSupported = useSpeechSupported();
   // Compact state depends on scroll POSITION with hysteresis (not direction),
   // so small finger movements while picking options cannot flip it back and forth.
