@@ -34,6 +34,7 @@ export function SyllableBuilder() {
   const [finalChar, setFinalChar] = useState<string | null>(null);
   const [tIdx, setTIdx] = useState(0); // no tone
   const [openSection, setOpenSection] = useState<SectionId | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const speechSupported = useSpeechSupported();
   // Compact state depends on scroll POSITION with hysteresis (not direction),
   // so small finger movements while picking options cannot flip it back and forth.
@@ -166,8 +167,37 @@ export function SyllableBuilder() {
         )}
       </Card>
 
-      {/* Details */}
-      <Card className="grid gap-3 p-5 text-sm shadow-[var(--shadow-card)] sm:grid-cols-2">
+      {/* Details (collapsible) */}
+      <Card className="overflow-hidden shadow-[var(--shadow-card)]">
+        <Button
+          id="syllable-details-trigger"
+          type="button"
+          variant="ghost"
+          onClick={() => setDetailsOpen((o) => !o)}
+          aria-expanded={detailsOpen}
+          aria-controls="syllable-details-panel"
+          className="grid min-h-12 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 rounded-none px-4 py-2 text-left hover:bg-muted/60"
+        >
+          <span className="min-w-0 truncate text-sm font-semibold">
+            音节详情 / <span className="font-thai">รายละเอียดพยางค์</span>
+          </span>
+          {!detailsOpen && (
+            <span className="truncate text-xs font-medium text-muted-foreground">
+              {romanized}
+            </span>
+          )}
+          <ChevronDown
+            aria-hidden="true"
+            className={`h-4 w-4 shrink-0 transition-transform ${detailsOpen ? "rotate-180" : "-rotate-90"}`}
+          />
+        </Button>
+        {detailsOpen && (
+        <div
+          id="syllable-details-panel"
+          role="region"
+          aria-labelledby="syllable-details-trigger"
+          className="grid gap-3 border-t border-border p-5 text-sm sm:grid-cols-2"
+        >
         <DetailRow
           zh="起始辅音"
           th="พยัญชนะต้น"
@@ -263,6 +293,8 @@ export function SyllableBuilder() {
             )
           }
         />
+        </div>
+        )}
       </Card>
 
       {/* Selectors */}
