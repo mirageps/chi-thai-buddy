@@ -96,11 +96,12 @@ export function SyllableBuilder() {
     <div className="flex flex-col gap-6">
       {/* Preview */}
       <Card
-        className={`sticky top-2 z-20 flex items-center border shadow-[var(--fc-shadow)] transition-[padding,gap] duration-200 ${
+        className={`sticky top-2 z-20 flex items-center border shadow-[var(--fc-shadow)] ${
           compactPreview
-            ? "flex-row justify-center gap-3 px-4 py-2"
+            ? "min-h-[68px] flex-row justify-center gap-3 px-4 py-2"
             : "flex-col gap-3 px-4 py-5 sm:p-8"
         }`}
+
         style={{
           backgroundImage:
             "linear-gradient(135deg, var(--fc-syllable-from) 0%, var(--fc-syllable-to) 100%)",
@@ -114,7 +115,7 @@ export function SyllableBuilder() {
           </p>
         )}
         <div
-          className={`font-thai font-bold leading-[1.4] transition-[font-size,padding] duration-200 ${
+          className={`font-thai font-bold leading-[1.4] ${
             compactPreview ? "py-0 text-4xl" : "py-1 text-7xl sm:py-3 sm:text-8xl"
           }`}
           style={{ color: "var(--fc-text-primary)" }}
@@ -125,7 +126,8 @@ export function SyllableBuilder() {
           size={compactPreview ? "icon" : "sm"}
           variant="secondary"
           onClick={() => speakThai(syllable)}
-          disabled={!useSpeechSupported()}
+          disabled={!speechSupported}
+
           aria-label="播放发音 / ฟังเสียง"
           title="播放发音 / ฟังเสียง"
           className={compactPreview ? "h-10 w-10 shrink-0 rounded-full" : ""}
