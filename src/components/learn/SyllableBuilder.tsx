@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,6 @@ import {
 } from "@/data/finals";
 import { speakThai } from "@/lib/speech";
 import { useSpeechSupported } from "@/hooks/useSpeechSupported";
-import { useScrollDirection } from "@/hooks/useScrollDirection";
 import {
   composeThaiSyllable,
   vowelPatternByIndex,
@@ -35,8 +34,27 @@ export function SyllableBuilder() {
   const [finalChar, setFinalChar] = useState<string | null>(null);
   const [tIdx, setTIdx] = useState(0); // no tone
   const [openSection, setOpenSection] = useState<SectionId | null>(null);
-  const scrollState = useScrollDirection({ topThreshold: 120, delta: 12 });
-  const compactPreview = scrollState === "down";
+  const speechSupported = useSpeechSupported();
+  // Compact state depends on scroll POSITION with hysteresis (not direction),
+  // so small finger movements while picking options cannot flip it back and forth.
+  const [compactPreview, setCompactPreview] = useState(false);
+  useEffect(() => {
+    let ticking = false;
+    const update = () => {
+      const y = window.scrollY;
+      setCompactPreview((prev) => (prev ? y > 90 : y > 200));
+      ticking = false;
+    };
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
 
   const consonant = CONSONANTS[cIdx];
   const vowel = VOWELS[vIdx];
