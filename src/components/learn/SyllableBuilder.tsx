@@ -141,7 +141,7 @@ export function SyllableBuilder() {
             {consonant.char} · {consonant.zhSound}
           </Badge>
           <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>
-            {vowel.form} · {vowel.zhSound}
+            {vowel.form} · 发音：{vowel.romanized}
           </Badge>
           {effectiveFinalChar && (
             <Badge variant="secondary" className="font-thai" style={CHIP_STYLE}>

@@ -65,11 +65,18 @@ export function VocabFlashcard({
         {i + 1} / {deck.length}
       </p>
 
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setFlipped((f) => !f)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setFlipped((f) => !f);
+          }
+        }}
         aria-label="翻转卡片 / พลิกการ์ด"
-        className="w-full"
+        className="w-full cursor-pointer"
       >
         <Card
           className="flex min-h-[240px] flex-col items-center justify-center gap-3 border-0 p-6 text-center shadow-[var(--fc-shadow)]"
@@ -104,7 +111,7 @@ export function VocabFlashcard({
             <SpeakButton text={word.thai} />
           </div>
         </Card>
-      </button>
+      </div>
 
       <div className="flex gap-3">
         <Button variant="outline" className="min-h-[48px] flex-1" onClick={() => next(false)}>

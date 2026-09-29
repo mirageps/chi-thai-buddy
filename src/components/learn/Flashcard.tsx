@@ -248,7 +248,7 @@ function BackFace({ mode, item }: { mode: Mode; item: Consonant | Vowel | Tone |
           {v.zhName}
         </div>
         <div className="font-thai text-2xl leading-[1.5]">示例：{v.render("อ")}</div>
-        <div className="text-lg">发音：{v.ipa}</div>
+        <div className="text-lg">发音：{v.romanized}</div>
         <div className="text-xs" style={{ color: "var(--fc-text-muted)" }}>
           {v.length === "short" ? "短元音 สระเสียงสั้น" : "长元音 สระเสียงยาว"}
         </div>

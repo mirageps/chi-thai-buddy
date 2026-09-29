@@ -64,13 +64,13 @@ function makeMixed(): MixedQ {
       3,
     ) as Vowel[];
     const options = [v, ...wrong]
-      .map((x) => `${x.zhName} (${x.zhSound})`)
+      .map((x) => `${x.zhName} · 发音：${x.romanized}`)
       .sort(() => Math.random() - 0.5);
     return {
       kind,
       prompt: v.render("อ"),
       speakText: v.render("อ"),
-      answer: `${v.zhName} (${v.zhSound})`,
+      answer: `${v.zhName} · 发音：${v.romanized}`,
       options,
       accentVar: "--vowel",
     };
