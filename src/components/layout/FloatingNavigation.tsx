@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, GraduationCap, User, Menu, X } from "lucide-react";
+import { Home, GraduationCap, BookOpen, User, Menu, X } from "lucide-react";
 import { useNavigationMode } from "@/hooks/useNavigationMode";
 
 const ITEMS = [
   { to: "/", label: "首页", th: "หน้าหลัก", icon: Home, match: (p: string) => p === "/" },
-  { to: "/learn", label: "学习", th: "เรียน", icon: GraduationCap, match: (p: string) => p.startsWith("/learn") },
+  { to: "/learn", label: "拼音", th: "อักษร", icon: GraduationCap, match: (p: string) => p.startsWith("/learn") },
+  { to: "/vocab", label: "背单词", th: "คำศัพท์", icon: BookOpen, match: (p: string) => p.startsWith("/vocab") },
   { to: "/profile", label: "我的", th: "ของฉัน", icon: User, match: (p: string) => p.startsWith("/profile") },
 ] as const;
 
@@ -97,7 +98,7 @@ export function FloatingNavigation() {
           className={`pointer-events-auto flex items-center gap-1 rounded-full p-1.5 transition-all duration-300 ease-out ${GLASS} ${
             compact ? "" : "px-2"
           }`}
-          style={{ maxWidth: compact ? "16rem" : "22rem", width: "88vw" }}
+          style={{ maxWidth: compact ? "18rem" : "26rem", width: "92vw" }}
         >
           {ITEMS.map((it) => {
             const active = it.match(pathname);
