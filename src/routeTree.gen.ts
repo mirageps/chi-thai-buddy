@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VocabRouteImport } from './routes/vocab'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnPinyinRouteImport } from './routes/learn.pinyin'
 
+const VocabRoute = VocabRouteImport.update({
+  id: '/vocab',
+  path: '/vocab',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -45,12 +51,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/learn': typeof LearnRouteWithChildren
   '/profile': typeof ProfileRoute
+  '/vocab': typeof VocabRoute
   '/learn/pinyin': typeof LearnPinyinRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/profile': typeof ProfileRoute
+  '/vocab': typeof VocabRoute
   '/learn/pinyin': typeof LearnPinyinRoute
   '/learn': typeof LearnIndexRoute
 }
@@ -59,25 +67,47 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/learn': typeof LearnRouteWithChildren
   '/profile': typeof ProfileRoute
+  '/vocab': typeof VocabRoute
   '/learn/pinyin': typeof LearnPinyinRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/learn' | '/profile' | '/learn/pinyin' | '/learn/'
+  fullPaths:
+    | '/'
+    | '/learn'
+    | '/profile'
+    | '/vocab'
+    | '/learn/pinyin'
+    | '/learn/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile' | '/learn/pinyin' | '/learn'
-  id: '__root__' | '/' | '/learn' | '/profile' | '/learn/pinyin' | '/learn/'
+  to: '/' | '/profile' | '/vocab' | '/learn/pinyin' | '/learn'
+  id:
+    | '__root__'
+    | '/'
+    | '/learn'
+    | '/profile'
+    | '/vocab'
+    | '/learn/pinyin'
+    | '/learn/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LearnRoute: typeof LearnRouteWithChildren
   ProfileRoute: typeof ProfileRoute
+  VocabRoute: typeof VocabRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vocab': {
+      id: '/vocab'
+      path: '/vocab'
+      fullPath: '/vocab'
+      preLoaderRoute: typeof VocabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -132,6 +162,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LearnRoute: LearnRouteWithChildren,
   ProfileRoute: ProfileRoute,
+  VocabRoute: VocabRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
