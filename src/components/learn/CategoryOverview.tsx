@@ -78,7 +78,7 @@ export function CategoryOverview({ cat }: { cat: Category }) {
                 >
                   <div className="font-thai text-lg leading-[1.5]">{v.forms}</div>
                   <div className="text-[11px] font-medium">{v.zhName}</div>
-                  <div className="text-[10px] text-muted-foreground">发音：{v.ipa}</div>
+                  <div className="text-[10px] text-muted-foreground">发音：{v.romanized}</div>
                 </div>
               ))}
             </div>

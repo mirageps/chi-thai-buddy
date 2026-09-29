@@ -50,11 +50,11 @@ function makeQuestion(mode: Mode): Question {
       3,
     ) as Vowel[];
     const options = [correct, ...wrong]
-      .map((v) => `${v.zhName} (${v.zhSound})`)
+      .map((v) => `${v.zhName} · 发音：${v.romanized}`)
       .sort(() => Math.random() - 0.5);
     return {
       prompt: correct.render("อ"),
-      answer: `${correct.zhName} (${correct.zhSound})`,
+      answer: `${correct.zhName} · 发音：${correct.romanized}`,
       options,
       speakText: correct.render("อ"),
     };
