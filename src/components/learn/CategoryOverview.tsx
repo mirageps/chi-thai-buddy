@@ -48,8 +48,11 @@ export function CategoryOverview({ cat }: { cat: Category }) {
                     style={{ borderColor: `color-mix(in oklab, var(--class-${cls}) 40%, var(--border))` }}
                   >
                     <div className="font-thai text-xl leading-[1.5]">{c.char}</div>
-                    <div className="font-thai text-[10px] text-muted-foreground">{c.name}</div>
-                    <div className="text-[10px]">{c.zhMeaning}</div>
+                     <div className="text-[10px] font-medium text-muted-foreground">{c.initialSound}</div>
+                     <div className="flex items-baseline justify-center gap-1 text-[10px]">
+                       <span className="font-thai">{c.meaning}</span>
+                       <span>{c.zhMeaning}</span>
+                     </div>
                   </div>
                 ))}
               </div>
