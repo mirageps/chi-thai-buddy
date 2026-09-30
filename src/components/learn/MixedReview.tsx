@@ -39,20 +39,22 @@ function pickKind(): Kind {
 function makeMixed(): MixedQ {
   const kind = pickKind();
   if (kind === "consonant") {
-    const [c] = sample(CONSONANTS, 1) as Consonant[];
-    const wrong = sample(
-      CONSONANTS.filter((x) => x.zhMeaning !== c.zhMeaning),
+    const consonantsWithSound = CONSONANTS.filter((x) => x.initialSound);
+    const [c] = sample(consonantsWithSound, 1) as Consonant[];
+    const wrongSounds = sample(
+      [...new Set(consonantsWithSound.map((x) => x.initialSound))].filter(
+        (sound) => sound !== c.initialSound,
+      ),
       3,
-    ) as Consonant[];
-    const options = [c, ...wrong]
-      .map((x) => x.zhMeaning)
+    );
+    const options = [c.initialSound, ...wrongSounds]
       .sort(() => Math.random() - 0.5);
     return {
       kind,
       prompt: c.char,
-      promptSub: c.name,
+      promptSub: `${c.name} ${c.zhMeaning}`,
       speakText: c.name,
-      answer: c.zhMeaning,
+      answer: c.initialSound,
       options,
       accentVar: "--consonant",
     };
