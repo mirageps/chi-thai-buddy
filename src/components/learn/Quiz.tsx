@@ -29,14 +29,13 @@ function makeQuestion(mode: Mode): Question {
   if (mode === "consonants") {
     const consonantsWithSound = CONSONANTS.filter((c) => c.initialSound);
     const [correct] = sample(consonantsWithSound, 1) as Consonant[];
-    const wrong = sample(
-      consonantsWithSound.filter(
-        (c) => c.initialSound !== correct.initialSound,
+    const wrongSounds = sample(
+      [...new Set(consonantsWithSound.map((c) => c.initialSound))].filter(
+        (sound) => sound !== correct.initialSound,
       ),
       3,
-    ) as Consonant[];
-    const options = [correct, ...wrong]
-      .map((c) => c.initialSound)
+    );
+    const options = [correct.initialSound, ...wrongSounds]
       .sort(() => Math.random() - 0.5);
     return {
       prompt: correct.char,

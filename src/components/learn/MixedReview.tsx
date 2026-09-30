@@ -41,14 +41,13 @@ function makeMixed(): MixedQ {
   if (kind === "consonant") {
     const consonantsWithSound = CONSONANTS.filter((x) => x.initialSound);
     const [c] = sample(consonantsWithSound, 1) as Consonant[];
-    const wrong = sample(
-      consonantsWithSound.filter(
-        (x) => x.initialSound !== c.initialSound,
+    const wrongSounds = sample(
+      [...new Set(consonantsWithSound.map((x) => x.initialSound))].filter(
+        (sound) => sound !== c.initialSound,
       ),
       3,
-    ) as Consonant[];
-    const options = [c, ...wrong]
-      .map((x) => x.initialSound)
+    );
+    const options = [c.initialSound, ...wrongSounds]
       .sort(() => Math.random() - 0.5);
     return {
       kind,
