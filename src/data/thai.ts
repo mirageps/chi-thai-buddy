@@ -9,6 +9,7 @@ export interface Consonant {
   romanized: string;    // ko kai
   meaning: string;      // Thai meaning of the mnemonic word
   zhMeaning: string;    // 中文含义
+  note?: string;        // หมายเหตุไทยและจีน
   zhSound: string;      // 中文拼音近似发音
   cls: ConsonantClass;
   initialSound: string; // used for syllable building
@@ -17,9 +18,9 @@ export interface Consonant {
 export const CONSONANTS: Consonant[] = [
   { char: "ก", name: "ก ไก่", romanized: "ko kai", meaning: "ไก่", zhMeaning: "鸡", zhSound: "g（如'哥'）", cls: "mid", initialSound: "g" },
   { char: "ข", name: "ข ไข่", romanized: "kho khai", meaning: "ไข่", zhMeaning: "蛋", zhSound: "k（送气'科'）", cls: "high", initialSound: "kh" },
-  { char: "ฃ", name: "ฃ ขวด", romanized: "kho khuat", meaning: "ขวด (เลิกใช้)", zhMeaning: "瓶子（已废弃）", zhSound: "k（送气）", cls: "high", initialSound: "kh" },
+  { char: "ฃ", name: "ฃ ขวด", romanized: "kho khuat", meaning: "ขวด", zhMeaning: "瓶子", note: "** เลิกใช้ / 已废弃", zhSound: "k（送气）", cls: "high", initialSound: "kh" },
   { char: "ค", name: "ค ควาย", romanized: "kho khwai", meaning: "ควาย", zhMeaning: "水牛", zhSound: "k（送气）", cls: "low", initialSound: "kh" },
-  { char: "ฅ", name: "ฅ คน", romanized: "kho khon", meaning: "คน (เลิกใช้)", zhMeaning: "人（已废弃）", zhSound: "k（送气）", cls: "low", initialSound: "kh" },
+  { char: "ฅ", name: "ฅ คน", romanized: "kho khon", meaning: "ฅ", zhMeaning: "人", note: "** เลิกใช้ / 已废弃", zhSound: "k（送气）", cls: "low", initialSound: "kh" },
   { char: "ฆ", name: "ฆ ระฆัง", romanized: "kho rakhang", meaning: "ระฆัง", zhMeaning: "钟", zhSound: "k（送气）", cls: "low", initialSound: "kh" },
   { char: "ง", name: "ง งู", romanized: "ngo ngu", meaning: "งู", zhMeaning: "蛇", zhSound: "ng（鼻音）", cls: "low", initialSound: "ng" },
   { char: "จ", name: "จ จาน", romanized: "cho chan", meaning: "จาน", zhMeaning: "盘子", zhSound: "j（如'知'不送气）", cls: "mid", initialSound: "j" },
@@ -56,7 +57,7 @@ export const CONSONANTS: Consonant[] = [
   { char: "ษ", name: "ษ ฤๅษี", romanized: "so ruesi", meaning: "ฤๅษี", zhMeaning: "隐士", zhSound: "s（如'思'）", cls: "high", initialSound: "s" },
   { char: "ส", name: "ส เสือ", romanized: "so suea", meaning: "เสือ", zhMeaning: "老虎", zhSound: "s（如'思'）", cls: "high", initialSound: "s" },
   { char: "ห", name: "ห หีบ", romanized: "ho hip", meaning: "หีบ", zhMeaning: "箱子", zhSound: "h（如'哈'）", cls: "high", initialSound: "h" },
-  { char: "ฬ", name: "ฬ จุฬา", romanized: "lo chula", meaning: "จุฬา (ว่าว)", zhMeaning: "朱拉风筝", zhSound: "l（如'了'）", cls: "low", initialSound: "l" },
+  { char: "ฬ", name: "ฬ จุฬา", romanized: "lo chula", meaning: "จุฬา", zhMeaning: "朱拉风筝", note: "* คือชนิดของว่าว / 是一种风筝", zhSound: "l（如'了'）", cls: "low", initialSound: "l" },
   { char: "อ", name: "อ อ่าง", romanized: "o ang", meaning: "อ่าง", zhMeaning: "盆", zhSound: "喉塞/元音载体", cls: "mid", initialSound: "" },
   { char: "ฮ", name: "ฮ นกฮูก", romanized: "ho nokhuk", meaning: "นกฮูก", zhMeaning: "猫头鹰", zhSound: "h（如'哈'）", cls: "low", initialSound: "h" },
 ];
