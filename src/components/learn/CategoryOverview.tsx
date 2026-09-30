@@ -50,14 +50,12 @@ export function CategoryOverview({ cat }: { cat: Category }) {
                       className="flex h-[5.5rem] flex-col items-center justify-center rounded-lg border bg-card px-2 py-1 text-center"
                       style={{ borderColor: `color-mix(in oklab, var(--class-${cls}) 40%, var(--border))` }}
                     >
-                      <div className="font-thai text-xl leading-[1.5]">
-                        {c.char}
-                        {mark && <span className="align-super text-[9px] text-muted-foreground">{mark}</span>}
-                      </div>
+                      <div className="font-thai text-xl leading-[1.5]">{c.char}</div>
                       <div className="text-[10px] font-medium text-muted-foreground">{c.initialSound}</div>
                       <div className="flex items-baseline justify-center gap-1 text-[10px]">
                         <span className="font-thai">{c.meaning}</span>
                         <span>{c.zhMeaning}</span>
+                        {mark && <span className="text-[9px] text-muted-foreground">{mark}</span>}
                       </div>
                     </div>
                   );
