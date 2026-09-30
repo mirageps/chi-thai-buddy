@@ -27,18 +27,21 @@ interface Question {
 
 function makeQuestion(mode: Mode): Question {
   if (mode === "consonants") {
-    const [correct] = sample(CONSONANTS, 1) as Consonant[];
+    const consonantsWithSound = CONSONANTS.filter((c) => c.initialSound);
+    const [correct] = sample(consonantsWithSound, 1) as Consonant[];
     const wrong = sample(
-      CONSONANTS.filter((c) => c.zhMeaning !== correct.zhMeaning),
+      consonantsWithSound.filter(
+        (c) => c.initialSound !== correct.initialSound,
+      ),
       3,
     ) as Consonant[];
     const options = [correct, ...wrong]
-      .map((c) => c.zhMeaning)
+      .map((c) => c.initialSound)
       .sort(() => Math.random() - 0.5);
     return {
       prompt: correct.char,
-      promptSub: correct.name,
-      answer: correct.zhMeaning,
+      promptSub: `${correct.name} ${correct.zhMeaning}`,
+      answer: correct.initialSound,
       options,
       speakText: correct.name,
     };
