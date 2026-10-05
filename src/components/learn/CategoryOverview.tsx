@@ -72,7 +72,7 @@ export function CategoryOverview({ cat }: { cat: Category }) {
               {g.list.map((v) => (
                 <div
                   key={v.form + v.romanized}
-                  className="rounded-lg border bg-card px-2 pb-1.5 pt-1"
+                  className="flex flex-col items-center justify-center rounded-lg border bg-card px-2 pb-1.5 pt-1 text-center"
                   style={{ borderColor: "color-mix(in oklab, var(--vowel) 35%, var(--border))" }}
                 >
                   <div className="font-thai text-lg leading-[1.5]">{v.forms}</div>
