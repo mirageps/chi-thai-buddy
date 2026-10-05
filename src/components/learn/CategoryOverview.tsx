@@ -38,38 +38,20 @@ export function CategoryOverview({ cat }: { cat: Category }) {
         {(["mid", "high", "low"] as const).map((cls) => {
           const list = CONSONANTS.filter((c) => c.cls === cls);
           const lbl = classLabel(cls);
-          const noted = list.filter((c) => c.note);
           return (
             <Group key={cls} zh={lbl.zh} th={lbl.th} count={list.length}>
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(4.75rem,1fr))] gap-1.5">
-                {list.map((c) => {
-                  const mark = c.note?.match(/^\*+/)?.[0] ?? "";
-                  return (
-                    <div
-                      key={c.char}
-                      className="flex h-[5.5rem] flex-col items-center justify-center rounded-lg border bg-card px-2 py-1 text-center"
-                      style={{ borderColor: `color-mix(in oklab, var(--class-${cls}) 40%, var(--border))` }}
-                    >
-                      <div className="font-thai text-xl leading-[1.5]">{c.char}</div>
-                      <div className="text-[10px] font-medium text-muted-foreground">{c.initialSound}</div>
-                      <div className="flex items-baseline justify-center gap-1 text-[10px]">
-                        <span className="font-thai">{c.meaning}</span>
-                        <span>{c.zhMeaning}</span>
-                        {mark && <span className="text-[9px] text-muted-foreground">{mark}</span>}
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-1.5">
+                {list.map((c) => (
+                  <div
+                    key={c.char}
+                    className="flex h-[4.25rem] flex-col items-center justify-center rounded-lg border bg-card px-2 py-1 text-center"
+                    style={{ borderColor: `color-mix(in oklab, var(--class-${cls}) 40%, var(--border))` }}
+                  >
+                    <div className="font-thai text-xl leading-[1.5]">{c.char}</div>
+                    <div className="text-[11px] font-medium text-muted-foreground">{c.initialSound}</div>
+                  </div>
+                ))}
               </div>
-              {noted.length > 0 && (
-                <div className="mt-1.5 space-y-0.5">
-                  {noted.map((c) => (
-                    <div key={c.char} className="text-[10px] leading-4 text-muted-foreground">
-                      <span className="font-thai">{c.char}</span> {c.note}
-                    </div>
-                  ))}
-                </div>
-              )}
             </Group>
           );
         })}
