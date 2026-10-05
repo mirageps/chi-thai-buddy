@@ -45,7 +45,7 @@ export function CategoryOverview({ cat }: { cat: Category }) {
                   <div
                     key={c.char}
                     className="flex h-[4.25rem] flex-col items-center justify-center rounded-lg border bg-card px-2 py-1 text-center"
-                    style={{ borderColor: `color-mix(in oklab, var(--class-${cls}) 40%, var(--border))` }}
+                    style={{ borderColor: `color-mix(in oklab, var(--class-${cls}) var(--overview-border-mix, 40%), var(--border))` }}
                   >
                     <div className="font-thai text-xl leading-[1.5]">{c.char}</div>
                     <div className="text-[11px] font-medium text-muted-foreground">{c.initialSound}</div>
@@ -73,7 +73,7 @@ export function CategoryOverview({ cat }: { cat: Category }) {
                 <div
                   key={v.form + v.romanized}
                   className="flex flex-col items-center justify-center rounded-lg border bg-card px-2 pb-1.5 pt-1 text-center"
-                  style={{ borderColor: "color-mix(in oklab, var(--vowel) 35%, var(--border))" }}
+                  style={{ borderColor: "color-mix(in oklab, var(--vowel) var(--overview-border-mix, 35%), var(--border))" }}
                 >
                   <div className="font-thai text-lg leading-[1.5]">{v.forms}</div>
                   <div className="text-[11px] font-medium">{v.zhName}</div>
