@@ -5,7 +5,7 @@ import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export type ThemePreference = "light" | "dark" | "system";
+export type ThemePreference = "light" | "dark" | "dark-plum" | "system";
 export type ResolvedTheme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "thai-learn-theme";
@@ -20,36 +20,40 @@ function systemTheme(): ResolvedTheme {
 function readPreference(): ThemePreference {
   if (typeof window === "undefined") return "system";
   const raw = window.localStorage.getItem(THEME_STORAGE_KEY);
-  return raw === "light" || raw === "dark" || raw === "system" ? raw : "system";
+  return raw === "light" || raw === "dark" || raw === "dark-plum" || raw === "system"
+    ? raw
+    : "system";
 }
 
-function applyResolved(t: ResolvedTheme) {
+function resolve(pref: ThemePreference): ResolvedTheme {
+  if (pref === "system") return systemTheme();
+  return pref === "light" ? "light" : "dark";
+}
+
+function applyResolved(t: ResolvedTheme, pref: ThemePreference) {
   const root = document.documentElement;
   root.classList.toggle("dark", t === "dark");
+  root.classList.toggle("theme-plum", pref === "dark-plum");
   root.dataset["theme"] = t;
   root.style.colorScheme = t;
 }
 
 /**
- * Single theme source of truth: a stored *preference* (light | dark | system)
- * and a *resolved* theme (light | dark) that follows the OS when preference is
- * "system". No page reload, no state loss — only a class swap on <html>.
+ * Single theme source of truth: a stored *preference* and a *resolved*
+ * light/dark theme. "dark-plum" is a dark palette variant (class theme-plum).
  */
 export function useTheme() {
   const [preference, setPreferenceState] = useState<ThemePreference>("system");
   const [resolved, setResolved] = useState<ResolvedTheme>("light");
 
-  // Read the stored preference after mount (the inline boot script already
-  // applied the correct class, so there is no flash here).
   useIsomorphicLayoutEffect(() => {
     const pref = readPreference();
     setPreferenceState(pref);
-    const next = pref === "system" ? systemTheme() : pref;
+    const next = resolve(pref);
     setResolved(next);
-    applyResolved(next);
+    applyResolved(next, pref);
   }, []);
 
-  // Follow OS changes live while the *stored* preference is "system".
   useEffect(() => {
     if (preference !== "system" || readPreference() !== "system") return;
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -57,7 +61,7 @@ export function useTheme() {
       if (readPreference() !== "system") return;
       const next: ResolvedTheme = mq.matches ? "dark" : "light";
       setResolved(next);
-      applyResolved(next);
+      applyResolved(next, "system");
     };
     onChange();
     mq.addEventListener("change", onChange);
@@ -67,9 +71,9 @@ export function useTheme() {
   const setPreference = useCallback((pref: ThemePreference) => {
     localStorage.setItem(THEME_STORAGE_KEY, pref);
     setPreferenceState(pref);
-    const next = pref === "system" ? systemTheme() : pref;
+    const next = resolve(pref);
     setResolved(next);
-    applyResolved(next);
+    applyResolved(next, pref);
   }, []);
 
   const toggle = useCallback(() => {

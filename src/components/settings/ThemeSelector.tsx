@@ -1,4 +1,4 @@
-import { Check, Monitor, Moon, Sun } from "lucide-react";
+import { Check, Monitor, Moon, Sparkles, Sun } from "lucide-react";
 import { useTheme, type ThemePreference } from "@/hooks/useTheme";
 
 const OPTIONS: {
@@ -8,7 +8,8 @@ const OPTIONS: {
   icon: typeof Sun;
 }[] = [
   { value: "light", zh: "浅色", th: "สว่าง", icon: Sun },
-  { value: "dark", zh: "深色", th: "มืด", icon: Moon },
+  { value: "dark", zh: "深色 · 极简灰", th: "มืด Slate", icon: Moon },
+  { value: "dark-plum", zh: "深色 · 优雅紫李", th: "มืด Mauve & Plum", icon: Sparkles },
   { value: "system", zh: "跟随系统", th: "ตามระบบ", icon: Monitor },
 ];
 
@@ -21,7 +22,7 @@ export function ThemeSelector() {
         <h2 className="text-sm font-semibold">外观主题</h2>
         <span className="font-thai text-[11px] text-muted-foreground">ธีมแอป</span>
       </div>
-      <div role="radiogroup" aria-label="外观主题 / ธีมแอป" className="grid gap-2 sm:grid-cols-3">
+      <div role="radiogroup" aria-label="外观主题 / ธีมแอป" className="grid gap-2 sm:grid-cols-2">
         {OPTIONS.map((o) => {
           const active = preference === o.value;
           const Icon = o.icon;
