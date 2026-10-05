@@ -9,21 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as LearnRouteImport } from './routes/learn'
-import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as VocabRouteImport } from './routes/vocab'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnPinyinRouteImport } from './routes/learn.pinyin'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LearnRoute = LearnRouteImport.update({
-  id: '/learn',
-  path: '/learn',
+const VocabRoute = VocabRouteImport.update({
+  id: '/vocab',
+  path: '/vocab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -31,9 +26,14 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VocabRoute = VocabRouteImport.update({
-  id: '/vocab',
-  path: '/vocab',
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnIndexRoute = LearnIndexRouteImport.update({
@@ -74,7 +74,12 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/learn' | '/profile' | '/vocab' | '/learn/pinyin' | '/learn/'
+    | '/'
+    | '/learn'
+    | '/profile'
+    | '/vocab'
+    | '/learn/pinyin'
+    | '/learn/'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/profile' | '/vocab' | '/learn/pinyin' | '/learn'
   id:
@@ -96,18 +101,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/learn': {
-      id: '/learn'
-      path: '/learn'
-      fullPath: '/learn'
-      preLoaderRoute: typeof LearnRouteImport
+    '/vocab': {
+      id: '/vocab'
+      path: '/vocab'
+      fullPath: '/vocab'
+      preLoaderRoute: typeof VocabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -117,11 +115,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/vocab': {
-      id: '/vocab'
-      path: '/vocab'
-      fullPath: '/vocab'
-      preLoaderRoute: typeof VocabRouteImport
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/': {
