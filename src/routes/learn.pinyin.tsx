@@ -1,6 +1,6 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, PencilLine } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -46,7 +46,7 @@ function PinyinPage() {
         </>
       }
     >
-      <div className="mb-4">
+      <div className="mb-4 flex items-center justify-between gap-2">
         <Button
           variant="outline"
           size="sm"
@@ -56,6 +56,12 @@ function PinyinPage() {
         >
           <ChevronLeft className="mr-1 h-4 w-4" />
           返回学习
+        </Button>
+        <Button asChild variant="secondary" size="sm" className="min-h-[44px]">
+          <Link to="/learn/practice" aria-label="练习 / แบบฝึกหัด">
+            <PencilLine className="mr-1.5 h-4 w-4" />
+            练习 <span className="font-thai ml-1 text-xs opacity-80">แบบฝึกหัด</span>
+          </Link>
         </Button>
       </div>
       <Card className="mx-auto max-w-3xl p-4 shadow-[var(--shadow-card)] sm:p-6">

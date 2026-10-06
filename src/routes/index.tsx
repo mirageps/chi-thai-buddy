@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Play, Blocks, GraduationCap } from "lucide-react";
+import { ChevronDown, ChevronUp, Play, Blocks, GraduationCap, PencilLine } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
 import { CONSONANTS, VOWELS, TONES } from "@/data/thai";
@@ -107,6 +107,12 @@ function HomePage() {
           <Link to="/learn/pinyin">
             <Blocks className="mr-1.5 h-4 w-4" />
             拼音节 <span className="font-thai ml-1 text-xs opacity-80">ประสมพยางค์</span>
+          </Link>
+        </Button>
+        <Button asChild size="sm" variant="outline">
+          <Link to="/learn/practice">
+            <PencilLine className="mr-1.5 h-4 w-4" />
+            练习 <span className="font-thai ml-1 text-xs opacity-80">แบบฝึกหัด</span>
           </Link>
         </Button>
       </div>
