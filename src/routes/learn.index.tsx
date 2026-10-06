@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Flashcard } from "@/components/learn/Flashcard";
 import { Quiz } from "@/components/learn/Quiz";
-import { MixedReview } from "@/components/learn/MixedReview";
+import { MixedReview, type ReviewCategory } from "@/components/learn/MixedReview";
 import { CategoryOverview } from "@/components/learn/CategoryOverview";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { LearningCategoryCard } from "@/components/layout/LearningCategoryCard";
@@ -298,8 +298,8 @@ function LearnPage() {
             </ModeShell>
           )}
           {learningMode === "review" && (
-            <ModeShell title="随机复习 / ทบทวนแบบสุ่ม" hint="混合辅音、元音、声调随机出题，配合发音训练听辨能力。">
-              <MixedReview />
+            <ModeShell title="随机复习 / ทบทวนแบบสุ่ม" hint="只从本类别随机出题，自动播放发音，训练听辨与记忆。/ สุ่มโจทย์เฉพาะหมวดนี้ พร้อมออกเสียงอัตโนมัติ">
+              <MixedReview key={cat} category={cat as ReviewCategory} />
             </ModeShell>
           )}
         </div>

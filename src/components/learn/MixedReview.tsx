@@ -28,7 +28,17 @@ interface MixedQ {
   accentVar: string;
 }
 
-function pickKind(): Kind {
+export type ReviewCategory = "consonants" | "vowels" | "finals" | "tones";
+
+const CAT_KIND: Record<ReviewCategory, Kind> = {
+  consonants: "consonant",
+  vowels: "vowel",
+  finals: "final",
+  tones: "tone",
+};
+
+function pickKind(category?: ReviewCategory): Kind {
+  if (category) return CAT_KIND[category];
   const r = Math.random();
   if (r < 0.25) return "consonant";
   if (r < 0.5) return "vowel";
@@ -36,8 +46,8 @@ function pickKind(): Kind {
   return "tone";
 }
 
-function makeMixed(): MixedQ {
-  const kind = pickKind();
+function makeMixed(category?: ReviewCategory): MixedQ {
+  const kind = pickKind(category);
   if (kind === "consonant") {
     const consonantsWithSound = CONSONANTS.filter((x) => x.initialSound);
     const [c] = sample(consonantsWithSound, 1) as Consonant[];
@@ -123,8 +133,8 @@ const KIND_LABEL: Record<Kind, string> = {
   tone: "声调 / วรรณยุกต์",
 };
 
-export function MixedReview() {
-  const [q, setQ] = useState<MixedQ>(() => makeMixed());
+export function MixedReview({ category }: { category?: ReviewCategory }) {
+  const [q, setQ] = useState<MixedQ>(() => makeMixed(category));
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [total, setTotal] = useState(0);
@@ -132,9 +142,9 @@ export function MixedReview() {
   const speechSupported = useSpeechSupported();
 
   const nextQ = useCallback(() => {
-    setQ(makeMixed());
+    setQ(makeMixed(category));
     setPicked(null);
-  }, []);
+  }, [category]);
 
   // Auto-speak on new question (only if browser supports)
   useEffect(() => {
