@@ -15,6 +15,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as VocabRouteImport } from './routes/vocab'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
 import { Route as LearnPinyinRouteImport } from './routes/learn.pinyin'
+import { Route as LearnPracticeRouteImport } from './routes/learn.practice'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const LearnPinyinRoute = LearnPinyinRouteImport.update({
   path: '/pinyin',
   getParentRoute: () => LearnRoute,
 } as any)
+const LearnPracticeRoute = LearnPracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => LearnRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/vocab': typeof VocabRoute
   '/learn/pinyin': typeof LearnPinyinRoute
+  '/learn/practice': typeof LearnPracticeRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRoutesByTo {
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/vocab': typeof VocabRoute
   '/learn/pinyin': typeof LearnPinyinRoute
+  '/learn/practice': typeof LearnPracticeRoute
   '/learn': typeof LearnIndexRoute
 }
 export interface FileRoutesById {
@@ -69,14 +77,22 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/vocab': typeof VocabRoute
   '/learn/pinyin': typeof LearnPinyinRoute
+  '/learn/practice': typeof LearnPracticeRoute
   '/learn/': typeof LearnIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/learn' | '/profile' | '/vocab' | '/learn/pinyin' | '/learn/'
+    | '/'
+    | '/learn'
+    | '/profile'
+    | '/vocab'
+    | '/learn/pinyin'
+    | '/learn/practice'
+    | '/learn/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/profile' | '/vocab' | '/learn/pinyin' | '/learn'
+  to:
+    '/' | '/profile' | '/vocab' | '/learn/pinyin' | '/learn/practice' | '/learn'
   id:
     | '__root__'
     | '/'
@@ -84,6 +100,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/vocab'
     | '/learn/pinyin'
+    | '/learn/practice'
     | '/learn/'
   fileRoutesById: FileRoutesById
 }
@@ -138,16 +155,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnPinyinRouteImport
       parentRoute: typeof LearnRoute
     }
+    '/learn/practice': {
+      id: '/learn/practice'
+      path: '/practice'
+      fullPath: '/learn/practice'
+      preLoaderRoute: typeof LearnPracticeRouteImport
+      parentRoute: typeof LearnRoute
+    }
   }
 }
 
 interface LearnRouteChildren {
   LearnPinyinRoute: typeof LearnPinyinRoute
+  LearnPracticeRoute: typeof LearnPracticeRoute
   LearnIndexRoute: typeof LearnIndexRoute
 }
 
 const LearnRouteChildren: LearnRouteChildren = {
   LearnPinyinRoute: LearnPinyinRoute,
+  LearnPracticeRoute: LearnPracticeRoute,
   LearnIndexRoute: LearnIndexRoute,
 }
 

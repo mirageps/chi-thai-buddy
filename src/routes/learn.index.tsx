@@ -10,7 +10,7 @@ import { CategoryOverview } from "@/components/learn/CategoryOverview";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { LearningCategoryCard } from "@/components/layout/LearningCategoryCard";
 import { useEdgeSwipeBack } from "@/hooks/useEdgeSwipeBack";
-import { BookOpen, Brain, Shuffle, ChevronLeft, ChevronsUpDown, LayoutList, Blocks, Check } from "lucide-react";
+import { BookOpen, Brain, Shuffle, ChevronLeft, ChevronsUpDown, LayoutList, Blocks, Check, PencilLine } from "lucide-react";
 
 type Category = "consonants" | "vowels" | "finals" | "tones";
 type LearningMode = "overview" | "flashcard" | "quiz" | "review";
@@ -149,12 +149,25 @@ function LearnPage() {
           <Link
             to="/learn/pinyin"
             aria-label="拼音节 / ประสมพยางค์"
-            className="col-span-2 block min-h-[44px] text-left lg:col-span-4"
+            className="block min-h-[44px] text-left lg:col-span-2"
           >
             <LearningCategoryCard
               th="ประสมพยางค์"
               zh="拼音节"
               desc="选择辅音 + 元音 + 韵尾 + 声调，实时拼出泰语音节。"
+              colorVar="--syllable-heading"
+              emphasis
+            />
+          </Link>
+          <Link
+            to="/learn/practice"
+            aria-label="练习 / แบบฝึกหัด"
+            className="block min-h-[44px] text-left lg:col-span-2"
+          >
+            <LearningCategoryCard
+              th="แบบฝึกหัด"
+              zh="练习"
+              desc="补全单词中缺少的辅音、元音或韵尾，每组 10 题。"
               colorVar="--syllable-heading"
               emphasis
             />
@@ -247,6 +260,13 @@ function LearnPage() {
               >
                 <Blocks className="h-4 w-4" />
                 拼音节 <span className="font-thai text-xs opacity-70">ประสมพยางค์</span>
+              </Link>
+              <Link
+                to="/learn/practice"
+                className="flex items-center gap-2 rounded-md px-2.5 py-2 text-sm hover:bg-muted"
+              >
+                <PencilLine className="h-4 w-4" />
+                练习 <span className="font-thai text-xs opacity-70">แบบฝึกหัด</span>
               </Link>
             </PopoverContent>
           </Popover>
