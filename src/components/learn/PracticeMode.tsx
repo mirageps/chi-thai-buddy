@@ -33,7 +33,7 @@ function makeSet(): Question[] {
 function Masked({ text, fill, state }: { text: string; fill?: string; state: "idle" | "right" | "wrong" }) {
   const [before, after] = text.split("_");
   const color =
-    state === "right" ? "text-[color:var(--class-low,#16a34a)]" : state === "wrong" ? "text-destructive" : "text-primary";
+    state === "right" ? "text-[color:var(--practice-ok)]" : state === "wrong" ? "text-destructive" : "text-primary";
   return (
     <span className="font-thai text-6xl font-bold leading-none tracking-wide">
       {before}
@@ -79,7 +79,7 @@ export function PracticeMode() {
           {qs.map((q, i) => (
             <li key={i} className="flex items-center gap-3 px-3 py-2.5">
               {results[i] ? (
-                <Check className="h-4 w-4 shrink-0 text-[color:var(--class-low,#16a34a)]" />
+                <Check className="h-4 w-4 shrink-0 text-[color:var(--practice-ok)]" />
               ) : (
                 <X className="h-4 w-4 shrink-0 text-destructive" />
               )}
@@ -150,7 +150,7 @@ export function PracticeMode() {
           const cls = !answered
             ? "hover:border-primary"
             : isAns
-              ? "border-[color:var(--class-low,#16a34a)] bg-[color:color-mix(in_oklab,var(--class-low,#16a34a)_15%,transparent)]"
+              ? "border-[color:var(--practice-ok)] bg-[color:color-mix(in_oklab,var(--practice-ok)_15%,transparent)]"
               : isPicked
                 ? "border-destructive bg-destructive/10"
                 : "opacity-50";
