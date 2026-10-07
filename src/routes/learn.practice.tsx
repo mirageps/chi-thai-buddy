@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { ChevronLeft, PencilLine } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { PracticeMode } from "@/components/learn/PracticeMode";
 import { useEdgeSwipeBack } from "@/hooks/useEdgeSwipeBack";
 
 const TITLE = "练习 · 泰语拼读填空 | 学泰语";
@@ -49,11 +49,7 @@ function PracticePage() {
           返回学习
         </Button>
       </div>
-      <Card className="mx-auto flex max-w-3xl flex-col items-center gap-2 p-8 text-center shadow-[var(--shadow-card)]">
-        <PencilLine className="h-8 w-8 text-primary" />
-        <p className="font-semibold">练习题即将上线</p>
-        <p className="font-thai text-sm text-muted-foreground">แบบฝึกหัดกำลังจะเปิดให้ใช้งานเร็วๆ นี้</p>
-      </Card>
+      <PracticeMode />
     </AppLayout>
   );
 }
