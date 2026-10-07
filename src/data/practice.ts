@@ -59,3 +59,23 @@ export function optionLabel(type: BlankType, s: string): string {
   if ("เแโไใ".includes(s)) return `${s}◌`;
   return `◌${s}`;
 }
+
+const isCons = (ch: string) => ch >= "\u0E01" && ch <= "\u0E2E" && ch !== "อ";
+const LEADING = "เแโไใ";
+const INNER_VOWELS = "ัิีึืุูา";
+
+/** Auto-build fill-in blanks from any Thai word (used for learned 背单词 words). */
+export function makeBlanks(word: string): PracticeBlank[] {
+  const chars = [...word];
+  const out: PracticeBlank[] = [];
+  const mask = (i: number, type: BlankType) =>
+    out.push({ type, masked: chars.map((c, j) => (j === i ? "_" : c)).join(""), answer: chars[i] });
+  const ii = LEADING.includes(chars[0]) ? 1 : 0;
+  if (ii === 1 && isCons(chars[1] ?? "")) mask(0, "vowel");
+  if (isCons(chars[ii] ?? "")) mask(ii, "initial");
+  const vi = chars.findIndex((c, j) => j > 0 && INNER_VOWELS.includes(c));
+  if (vi > 0 && !(ii === 1 && vi === 0)) mask(vi, "vowel");
+  const li = chars.length - 1;
+  if (li > ii && isCons(chars[li]) && !LEADING.includes(chars[li - 1])) mask(li, "final");
+  return out;
+}
