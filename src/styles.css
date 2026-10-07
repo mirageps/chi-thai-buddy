@@ -314,3 +314,13 @@
   .font-thai { font-family: var(--font-thai); }
   .font-cn { font-family: var(--font-cn); }
 }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+:root { --practice-ok: #15803d; }
+.dark { --practice-ok: #4ade80; }
+.dark.theme-plum { --practice-ok: #86c99a; }
