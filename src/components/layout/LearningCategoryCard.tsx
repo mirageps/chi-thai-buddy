@@ -5,6 +5,7 @@ export function LearningCategoryCard({
   colorVar,
   active,
   emphasis,
+  stat,
 }: {
   th: string;
   zh: string;
@@ -12,32 +13,38 @@ export function LearningCategoryCard({
   colorVar: string;
   active?: boolean;
   emphasis?: boolean;
+  stat?: string;
 }) {
   return (
     <div
-      className={`group h-full rounded-xl border p-4 text-left transition-all ${
-        active
-          ? "shadow-[var(--shadow-soft)] ring-2 ring-offset-2"
-          : "hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]"
+      className={`group flex h-full flex-col rounded-xl border p-4 text-left transition-colors ${
+        active ? "ring-2 ring-offset-2" : "hover:bg-muted"
       }`}
       style={{
-        borderColor: active ? `var(${colorVar})` : undefined,
+        borderTop: `3px solid var(${colorVar})`,
         ["--tw-ring-color" as string]: `var(${colorVar})`,
-        backgroundColor: active
-          ? `color-mix(in oklab, var(${colorVar}) 8%, var(--card))`
-          : emphasis
-          ? `color-mix(in oklab, var(${colorVar}) 6%, var(--card))`
+        backgroundColor: active || emphasis
+          ? `color-mix(in oklab, var(${colorVar}) 5%, var(--card))`
           : "var(--card)",
       }}
     >
-      <div
-        className="mb-1 font-thai text-xl font-semibold leading-[1.4]"
-        style={{ color: `var(${colorVar})` }}
-      >
-        {th}
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-base font-semibold">{zh}</div>
+          <div className="font-thai text-sm leading-[1.5]" style={{ color: `var(${colorVar})` }}>
+            {th}
+          </div>
+        </div>
+        {stat && (
+          <span
+            className="shrink-0 text-xl font-bold tabular-nums"
+            style={{ color: `var(${colorVar})` }}
+          >
+            {stat}
+          </span>
+        )}
       </div>
-      <div className="text-sm font-semibold">{zh}</div>
-      <p className="mt-1 text-xs text-muted-foreground">{desc}</p>
+      <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{desc}</p>
     </div>
   );
 }
