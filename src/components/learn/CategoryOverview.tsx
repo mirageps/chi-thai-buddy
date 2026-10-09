@@ -1,5 +1,7 @@
-import { CONSONANTS, VOWELS, TONES, classLabel } from "@/data/thai";
+import { useState } from "react";
+import { VOWELS, TONES, classLabel, type Consonant } from "@/data/thai";
 import { FINALS } from "@/data/finals";
+import { homeConsonants, CLASS_LEGEND } from "@/lib/home-order";
 
 type Category = "consonants" | "vowels" | "finals" | "tones";
 
@@ -30,34 +32,112 @@ function Group({
   );
 }
 
-/** Read-only overview (总览) built from the existing data sources only. */
-export function CategoryOverview({ cat }: { cat: Category }) {
-  if (cat === "consonants") {
-    return (
-      <div>
-        {(["mid", "high", "low"] as const).map((cls) => {
-          const list = CONSONANTS.filter((c) => c.cls === cls);
+function ConsonantTile({ c }: { c: Consonant }) {
+  return (
+    <li>
+      <div
+        title={`${c.name} · ${c.zhMeaning}`}
+        className="flex min-h-[52px] flex-col items-center justify-center rounded-lg border px-1 pb-1 pt-1.5"
+        style={{
+          backgroundColor: `var(--class-${c.cls})`,
+          borderColor: `color-mix(in oklab, var(--class-${c.cls}) 86%, #000)`,
+        }}
+      >
+        <span className="font-thai text-lg leading-[1.4]" style={{ color: "var(--class-ink)" }}>
+          {c.char}
+        </span>
+        <span className="mt-0.5 flex items-center gap-1 leading-[1.4]">
+          <span
+            className="text-[10px] font-medium italic"
+            style={{ color: "color-mix(in oklab, var(--class-ink) 70%, transparent)" }}
+          >
+            {c.initialSound}
+          </span>
+          <span
+            className="rounded px-1 text-[9px] font-semibold"
+            style={{
+              color: "var(--class-ink)",
+              backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 55%, var(--card))`,
+            }}
+          >
+            {c.cls === "mid" ? "中" : c.cls === "high" ? "高" : "低"}
+          </span>
+        </span>
+      </div>
+    </li>
+  );
+}
+
+const GRID = "grid grid-cols-5 gap-1.5 sm:grid-cols-8 lg:grid-cols-11";
+
+function ConsonantOverview() {
+  const [sort, setSort] = useState<"alpha" | "class">("alpha");
+  const opts = [
+    { k: "alpha", zh: "按 ก–ฮ", th: "เรียง ก–ฮ" },
+    { k: "class", zh: "按类别", th: "ตามประเภท" },
+  ] as const;
+  return (
+    <div>
+      <div className="mb-3 inline-flex rounded-full border bg-card p-0.5" role="tablist">
+        {opts.map((o) => (
+          <button
+            key={o.k}
+            role="tab"
+            aria-selected={sort === o.k}
+            onClick={() => setSort(o.k)}
+            className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+              sort === o.k ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+            }`}
+          >
+            {o.zh} <span className="font-thai font-normal opacity-80">{o.th}</span>
+          </button>
+        ))}
+      </div>
+      <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+        {CLASS_LEGEND.map((l) => (
+          <span key={l.cls} className="flex items-center gap-1">
+            <span aria-hidden className="h-2 w-2 rounded-full" style={{ backgroundColor: `var(--class-${l.cls})` }} />
+            <span className="text-foreground">{l.zh}</span>
+            <span className="font-thai">{l.th}</span>
+          </span>
+        ))}
+      </div>
+      <p className="mb-3 text-[11px] leading-relaxed text-muted-foreground">
+        发音标注参考汉语拼音，帮助初学者快速辨认，不代表完全相同的发音。
+        <br />
+        <span className="font-thai">
+          สัญลักษณ์เสียงอ้างอิงจากพินอินเพื่อช่วยให้ผู้เริ่มต้นจดจำ ไม่ได้หมายความว่าออกเสียงเหมือนกันทั้งหมด
+        </span>
+      </p>
+      {sort === "alpha" ? (
+        <ol className={GRID}>
+          {homeConsonants.map((c) => (
+            <ConsonantTile key={c.char} c={c} />
+          ))}
+        </ol>
+      ) : (
+        (["mid", "high", "low"] as const).map((cls) => {
+          const list = homeConsonants.filter((c) => c.cls === cls);
           const lbl = classLabel(cls);
           return (
             <Group key={cls} zh={lbl.zh} th={lbl.th} count={list.length}>
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(4rem,1fr))] gap-1.5">
+              <ol className={GRID}>
                 {list.map((c) => (
-                  <div
-                    key={c.char}
-                    className="flex h-[4.25rem] flex-col items-center justify-center rounded-lg border bg-card px-2 py-1 text-center"
-                    style={{ borderColor: `color-mix(in oklab, var(--class-${cls}) var(--overview-border-mix, 40%), var(--border))` }}
-                  >
-                    <div className="font-thai text-xl leading-[1.5]">{c.char}</div>
-                    <div className="text-[11px] font-medium text-muted-foreground">{c.initialSound}</div>
-                  </div>
+                  <ConsonantTile key={c.char} c={c} />
                 ))}
-              </div>
+              </ol>
             </Group>
           );
-        })}
-      </div>
-    );
-  }
+        })
+      )}
+    </div>
+  );
+}
+
+/** Read-only overview (总览) built from the existing data sources only. */
+export function CategoryOverview({ cat }: { cat: Category }) {
+  if (cat === "consonants") return <ConsonantOverview />;
+
 
   if (cat === "vowels") {
     return (
