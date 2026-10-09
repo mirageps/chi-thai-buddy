@@ -7,6 +7,8 @@ import { Flashcard } from "@/components/learn/Flashcard";
 import { Quiz } from "@/components/learn/Quiz";
 import { MixedReview, type ReviewCategory } from "@/components/learn/MixedReview";
 import { CategoryOverview } from "@/components/learn/CategoryOverview";
+import { CONSONANTS, VOWELS, TONES } from "@/data/thai";
+import { FINALS } from "@/data/finals";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { LearningCategoryCard } from "@/components/layout/LearningCategoryCard";
 import { useEdgeSwipeBack } from "@/hooks/useEdgeSwipeBack";
@@ -34,6 +36,13 @@ const MODES: { key: LearningMode; zh: string; th: string; icon: typeof BookOpen 
   { key: "quiz", zh: "测验", th: "แบบทดสอบ", icon: Brain },
   { key: "review", zh: "随机复习", th: "ทบทวนแบบสุ่ม", icon: Shuffle },
 ];
+
+const STATS: Record<Category, string> = {
+  consonants: String(CONSONANTS.length),
+  vowels: String(VOWELS.length),
+  finals: String(FINALS.length),
+  tones: String(TONES.length),
+};
 
 const VALID_CATS: Category[] = ["consonants", "vowels", "finals", "tones"];
 
@@ -143,7 +152,7 @@ function LearnPage() {
               aria-label={`${c.zh} / ${c.th}`}
               className="block min-h-[44px] text-left"
             >
-              <LearningCategoryCard th={c.th} zh={c.zh} desc={c.desc} colorVar={c.colorVar} />
+              <LearningCategoryCard th={c.th} zh={c.zh} desc={c.desc} colorVar={c.colorVar} stat={STATS[c.key]} />
             </button>
           ))}
           <Link
