@@ -5,6 +5,16 @@ import { User, Settings, Info, ChevronRight } from "lucide-react";
 import { ThemeSelector } from "@/components/settings/ThemeSelector";
 
 export const Route = createFileRoute("/profile")({
+  head: () => ({
+    meta: [
+      { title: "学泰语 · 我的与主题设置 | เรียนภาษาไทย" },
+      { name: "description", content: "查看泰语学习设置，选择浅色、深色或梅紫主题。ดูการตั้งค่าการเรียนและเลือกธีมแอป" },
+      { property: "og:title", content: "学泰语 · 我的与主题设置 | เรียนภาษาไทย" },
+      { property: "og:description", content: "个人学习设置与浅色、深色、梅紫主题。การตั้งค่าการเรียนและธีมแอป" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: ProfilePage,
 });
 
