@@ -1,9 +1,10 @@
 // 背单词进度与自建单词的本地存储（localStorage，浏览器原生，无外部服务）
 import { useCallback, useEffect, useState } from "react";
-import { VOCAB, type Difficulty, type VocabWord } from "@/data/vocab";
+import { VOCAB, registerCustomCategories, type Difficulty, type VocabCategory, type VocabWord } from "@/data/vocab";
 
 const KEY_PROGRESS = "vocab.progress.v1";
 const KEY_CUSTOM = "vocab.custom.v1";
+const KEY_CATS = "vocab.categories.v1";
 
 export type WordProgress = {
   /** 已掌握 */
@@ -39,10 +40,14 @@ export function useVocabStore() {
   const [hydrated, setHydrated] = useState(false);
   const [progress, setProgress] = useState<ProgressMap>({});
   const [custom, setCustom] = useState<VocabWord[]>([]);
+  const [categories, setCategories] = useState<VocabCategory[]>([]);
 
   useEffect(() => {
     setProgress(readJSON<ProgressMap>(KEY_PROGRESS, {}));
     setCustom(readJSON<VocabWord[]>(KEY_CUSTOM, []));
+    const cats = readJSON<VocabCategory[]>(KEY_CATS, []);
+    registerCustomCategories(cats);
+    setCategories(cats);
     setHydrated(true);
   }, []);
 
@@ -70,14 +75,34 @@ export function useVocabStore() {
   }, []);
 
   const addWord = useCallback(
-    (input: { thai: string; pron: string; zh: string; difficulty: Difficulty }) => {
+    (input: {
+      thai: string;
+      pron: string;
+      zh: string;
+      difficulty: Difficulty;
+      category?: string;
+      newCategory?: { zh: string; th: string };
+    }) => {
+      let category = input.category || "mine";
+      if (input.newCategory && (input.newCategory.zh.trim() || input.newCategory.th.trim())) {
+        const zh = input.newCategory.zh.trim() || input.newCategory.th.trim();
+        const th = input.newCategory.th.trim() || zh;
+        const cat: VocabCategory = { key: `cat-${Date.now()}`, zh, th };
+        category = cat.key;
+        setCategories((prev) => {
+          const next = [...prev, cat];
+          registerCustomCategories(next);
+          writeJSON(KEY_CATS, next);
+          return next;
+        });
+      }
       const word: VocabWord = {
         id: `my-${Date.now()}`,
         thai: input.thai.trim(),
         pron: input.pron.trim(),
         zh: input.zh.trim(),
         difficulty: input.difficulty,
-        category: "mine",
+        category,
         custom: true,
       };
       setCustom((prev) => {
@@ -104,6 +129,7 @@ export function useVocabStore() {
     hydrated,
     words,
     custom,
+    categories,
     progress,
     masteredCount,
     mark,

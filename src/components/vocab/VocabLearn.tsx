@@ -10,7 +10,9 @@ export function VocabLearn({
   words,
   progress,
   onMark,
+  fixedCategory,
 }: {
+  fixedCategory?: boolean;
   words: VocabWord[];
   progress: ProgressMap;
   onMark: (id: string, mastered: boolean) => void;
@@ -19,8 +21,9 @@ export function VocabLearn({
   const [index, setIndex] = useState(0);
 
   const list = useMemo(
-    () => words.filter((w) => (cat === "mine" ? w.custom : w.category === cat)),
-    [words, cat],
+    () =>
+      fixedCategory ? words : words.filter((w) => (cat === "mine" ? w.custom : w.category === cat)),
+    [words, cat, fixedCategory],
   );
   const word = list[Math.min(index, Math.max(list.length - 1, 0))];
 
@@ -28,6 +31,7 @@ export function VocabLearn({
 
   return (
     <div className="space-y-4">
+      {!fixedCategory && (
       <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1">
         {tabs.map((c) => {
           const active = c.key === cat;
@@ -50,6 +54,7 @@ export function VocabLearn({
           );
         })}
       </div>
+      )}
 
       {!word ? (
         <Card className="p-8 text-center text-sm text-muted-foreground">
