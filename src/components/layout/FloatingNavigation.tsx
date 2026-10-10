@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, GraduationCap, BookOpen, User, Menu, X } from "lucide-react";
 import { useNavigationMode } from "@/hooks/useNavigationMode";
+import { Button } from "@/components/ui/button";
 
 const ITEMS = [
   { to: "/", label: "首页", th: "หน้าหลัก", icon: Home, match: (p: string) => p === "/" },
@@ -11,7 +12,7 @@ const ITEMS = [
 ] as const;
 
 const GLASS =
-  "border border-border bg-card/90 backdrop-blur-xl supports-[backdrop-filter]:bg-card/75 shadow-[var(--shadow-soft)]";
+  "glass-frosted border";
 
 export function FloatingNavigation() {
   const mode = useNavigationMode();
@@ -83,7 +84,9 @@ export function FloatingNavigation() {
               })}
             </ul>
           )}
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             type="button"
             aria-label={expanded ? "关闭导航 / ปิดเมนู" : "打开导航 / เปิดเมนู"}
             aria-expanded={expanded}
@@ -91,7 +94,7 @@ export function FloatingNavigation() {
             className={`grid h-12 w-12 place-items-center rounded-full text-foreground transition-transform hover:scale-105 active:scale-95 ${GLASS}`}
           >
             {expanded ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          </Button>
         </div>
       ) : (
         <nav

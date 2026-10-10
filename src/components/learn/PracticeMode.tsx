@@ -93,9 +93,10 @@ export function PracticeMode() {
 
   const total = qs.length;
   const tabs = (
-    <div className="mx-auto mb-3 flex max-w-3xl gap-1 rounded-xl border bg-card p-1">
+    <div className="glass-frosted mx-auto mb-3 flex max-w-3xl gap-1 rounded-xl border p-1">
       {SOURCES.map((s) => (
-        <button
+        <Button
+          variant="ghost"
           key={s.key}
           type="button"
           onClick={() => setSource(s.key)}
@@ -108,7 +109,7 @@ export function PracticeMode() {
             {s.key === "learned" && ` ${learned.length}`}
           </span>
           <span className="font-thai text-[10px] font-normal opacity-80">{s.th}</span>
-        </button>
+        </Button>
       ))}
     </div>
   );
@@ -232,15 +233,16 @@ export function PracticeMode() {
                 ? "border-destructive bg-destructive/10"
                 : "opacity-50";
           return (
-            <button
+            <Button
+              variant="outline"
               key={opt}
               type="button"
               onClick={() => choose(opt)}
               disabled={answered}
-              className={`font-thai min-h-[64px] rounded-xl border-2 bg-card text-3xl font-semibold transition-colors ${cls}`}
+              className={`glass-clear font-thai min-h-[64px] rounded-xl border-2 text-3xl font-semibold transition-colors ${cls}`}
             >
               {optionLabel(q.blank.type, opt)}
-            </button>
+            </Button>
           );
         })}
       </div>

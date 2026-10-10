@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Define shared glass surfaces and their fallback styling in src/styles.css, and opt in using named classes; this keeps theme behavior consistent without changing learning logic.

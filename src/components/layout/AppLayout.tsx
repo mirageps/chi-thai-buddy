@@ -13,7 +13,7 @@ export function AppLayout({
   const { theme, toggle } = useTheme();
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-[color:var(--hero-bg)] text-[color:var(--hero-ink)]">
+      <header className="glass-header border-b text-[color:var(--hero-ink)]">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-6 sm:py-8">
           <div className="flex items-center justify-between gap-2 text-sm opacity-90">
             <div className="flex items-center gap-2">
