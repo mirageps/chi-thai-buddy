@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { VOWELS, TONES, classLabel, type Consonant } from "@/data/thai";
 import { FINALS } from "@/data/finals";
 import { homeConsonants, CLASS_LEGEND } from "@/lib/home-order";
@@ -37,26 +38,24 @@ function ConsonantTile({ c }: { c: Consonant }) {
     <li>
       <div
         title={`${c.name} · ${c.zhMeaning}`}
-        className="flex min-h-[52px] flex-col items-center justify-center rounded-lg border px-1 pb-1 pt-1.5"
+        className="glass-letter flex min-h-[52px] flex-col items-center justify-center rounded-lg border px-1 pb-1 pt-1.5"
         style={{
-          backgroundColor: `var(--class-${c.cls})`,
-          borderColor: `color-mix(in oklab, var(--class-${c.cls}) 86%, #000)`,
+          ["--letter-color" as string]: `var(--class-${c.cls})`,
         }}
       >
-        <span className="font-thai text-lg leading-[1.4]" style={{ color: "var(--class-ink)" }}>
+        <span className="font-thai text-lg leading-[1.4]">
           {c.char}
         </span>
         <span className="mt-0.5 flex items-center gap-1 leading-[1.4]">
           <span
-            className="text-[10px] font-medium italic"
-            style={{ color: "color-mix(in oklab, var(--class-ink) 70%, transparent)" }}
+            className="text-[10px] font-medium italic text-muted-foreground"
           >
             {c.initialSound}
           </span>
           <span
             className="rounded px-1 text-[9px] font-semibold"
             style={{
-              color: "var(--class-ink)",
+              color: "var(--foreground)",
               backgroundColor: `color-mix(in oklab, var(--class-${c.cls}) 55%, var(--card))`,
             }}
           >
@@ -78,9 +77,10 @@ function ConsonantOverview() {
   ] as const;
   return (
     <div>
-      <div className="mb-3 inline-flex rounded-full border bg-card p-0.5" role="tablist">
+      <div className="glass-frosted mb-3 inline-flex rounded-full border p-0.5" role="tablist">
         {opts.map((o) => (
-          <button
+          <Button
+            variant="ghost"
             key={o.k}
             role="tab"
             aria-selected={sort === o.k}
@@ -90,7 +90,7 @@ function ConsonantOverview() {
             }`}
           >
             {o.zh} <span className="font-thai font-normal opacity-80">{o.th}</span>
-          </button>
+          </Button>
         ))}
       </div>
       <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
@@ -152,7 +152,7 @@ export function CategoryOverview({ cat }: { cat: Category }) {
               {g.list.map((v) => (
                 <div
                   key={v.form + v.romanized}
-                  className="flex flex-col items-center justify-center rounded-lg border bg-card px-2 pb-1.5 pt-1 text-center"
+                  className="glass-clear flex flex-col items-center justify-center rounded-lg border px-2 pb-1.5 pt-1 text-center"
                   style={{ borderColor: "color-mix(in oklab, var(--vowel) var(--overview-border-mix, 35%), var(--border))" }}
                 >
                   <div className="font-thai text-lg leading-[1.5]">{v.forms}</div>
@@ -173,7 +173,7 @@ export function CategoryOverview({ cat }: { cat: Category }) {
         {FINALS.map((f) => (
           <div
             key={f.key}
-            className="rounded-lg border bg-card p-3"
+            className="glass-clear rounded-lg border p-3"
             style={{ borderColor: "color-mix(in oklab, var(--final) 35%, var(--border))" }}
           >
             <div className="flex items-baseline gap-2">
@@ -204,7 +204,7 @@ export function CategoryOverview({ cat }: { cat: Category }) {
       {TONES.map((t) => (
         <div
           key={t.zhName}
-          className="flex items-center gap-3 rounded-lg border bg-card p-3"
+          className="glass-clear flex items-center gap-3 rounded-lg border p-3"
           style={{ borderColor: "color-mix(in oklab, var(--tone) 35%, var(--border))" }}
         >
           <div className="font-thai min-w-[2.5rem] text-2xl leading-[1.5]">{t.mark}</div>

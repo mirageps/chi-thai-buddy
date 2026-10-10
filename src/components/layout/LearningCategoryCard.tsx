@@ -17,15 +17,15 @@ export function LearningCategoryCard({
 }) {
   return (
     <div
-      className={`group flex h-full flex-col rounded-xl border p-4 text-left transition-colors ${
+      className={`glass-clear group flex h-full flex-col rounded-xl border p-4 text-left transition-colors ${
         active ? "ring-2 ring-offset-2" : "hover:bg-muted"
       }`}
       style={{
         borderTop: `3px solid var(${colorVar})`,
         ["--tw-ring-color" as string]: `var(${colorVar})`,
         backgroundColor: active || emphasis
-          ? `color-mix(in oklab, var(${colorVar}) 5%, var(--card))`
-          : "var(--card)",
+          ? `color-mix(in oklab, var(${colorVar}) 5%, var(--glass-frosted))`
+          : "var(--glass-clear)",
       }}
     >
       <div className="flex items-start justify-between gap-2">

@@ -69,7 +69,7 @@ function HomePage() {
       }
     >
       {/* Progress */}
-      <section className="mb-5 rounded-2xl border bg-card p-4">
+      <section className="glass-frosted mb-5 rounded-2xl border p-4">
         <div className="flex items-baseline justify-between">
           <h2 className="text-sm font-semibold">
             学习进度 <span className="font-thai text-xs font-normal text-muted-foreground">ความคืบหน้า</span>
@@ -106,7 +106,7 @@ function HomePage() {
               key={a.to}
               to={a.to}
               className={`flex min-h-[56px] items-center gap-2.5 rounded-xl border px-3 transition-colors ${
-                isPrimary ? "border-primary bg-primary text-primary-foreground" : "bg-card hover:bg-muted"
+                isPrimary ? "border-primary bg-primary text-primary-foreground shadow-[var(--shadow-card)]" : "glass-clear hover:bg-muted"
               }`}
             >
               <Icon className={`h-5 w-5 shrink-0 ${isPrimary ? "" : "text-primary"}`} />
@@ -129,7 +129,7 @@ function HomePage() {
             key={s.cat}
             to="/learn"
             search={{ cat: s.cat }}
-            className="group flex items-center gap-3 rounded-xl border bg-card p-3 transition-colors hover:bg-muted"
+            className="glass-clear group flex items-center gap-3 rounded-xl border p-3 transition-colors hover:bg-muted"
             style={{ borderLeft: `3px solid var(${s.colorVar})` }}
           >
             <span className="text-2xl font-bold tabular-nums" style={{ color: `var(${s.colorVar})` }}>
