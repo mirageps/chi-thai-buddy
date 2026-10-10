@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, Search, Trash2, Check } from "lucide-react";
-import { DIFFICULTY_META, categoryLabel, type Difficulty, type VocabWord } from "@/data/vocab";
+import { DIFFICULTY_META, VOCAB_CATEGORIES, categoryLabel, type Difficulty, type VocabCategory, type VocabWord } from "@/data/vocab";
 import { SpeakButton } from "./SpeakButton";
 import type { ProgressMap } from "@/lib/vocab-store";
 
@@ -23,10 +23,21 @@ export function VocabLibrary({
   progress,
   onAdd,
   onRemove,
+  customCategories = [],
+  defaultCategory,
 }: {
+  customCategories?: VocabCategory[];
+  defaultCategory?: string;
   words: VocabWord[];
   progress: ProgressMap;
-  onAdd: (w: { thai: string; pron: string; zh: string; difficulty: Difficulty }) => void;
+  onAdd: (w: {
+    thai: string;
+    pron: string;
+    zh: string;
+    difficulty: Difficulty;
+    category?: string;
+    newCategory?: { zh: string; th: string };
+  }) => void;
   onRemove: (id: string) => void;
 }) {
   const [q, setQ] = useState("");
@@ -35,6 +46,15 @@ export function VocabLibrary({
   const [pron, setPron] = useState("");
   const [zh, setZh] = useState("");
   const [difficulty, setDifficulty] = useState<Difficulty>("basic");
+  const initCat = defaultCategory && defaultCategory !== "all" ? defaultCategory : "mine";
+  const [category, setCategory] = useState<string>(initCat);
+  const [newZh, setNewZh] = useState("");
+  const [newTh, setNewTh] = useState("");
+  const allCats: VocabCategory[] = [
+    ...VOCAB_CATEGORIES,
+    ...customCategories,
+    { key: "mine", zh: "我的单词", th: "คำของฉัน" },
+  ];
 
   const list = useMemo(() => {
     const k = q.trim().toLowerCase();
@@ -47,11 +67,22 @@ export function VocabLibrary({
     );
   }, [words, q]);
 
-  const canSave = thai.trim() && zh.trim();
+  const canSave =
+    thai.trim() && zh.trim() && (category !== "__new" || newZh.trim() || newTh.trim());
 
   const save = () => {
     if (!canSave) return;
-    onAdd({ thai, pron, zh, difficulty });
+    onAdd({
+      thai,
+      pron,
+      zh,
+      difficulty,
+      category: category === "__new" ? undefined : category,
+      newCategory: category === "__new" ? { zh: newZh, th: newTh } : undefined,
+    });
+    setCategory(initCat);
+    setNewZh("");
+    setNewTh("");
     setThai("");
     setPron("");
     setZh("");
@@ -108,7 +139,7 @@ export function VocabLibrary({
               >
                 {DIFFICULTY_META[w.difficulty].zh}
               </span>
-              <span className="hidden shrink-0 text-[11px] text-muted-foreground sm:inline">
+              <span className="shrink-0 text-[11px] text-muted-foreground">
                 {categoryLabel(w.category).zh}
               </span>
               <SpeakButton text={w.thai} size="sm" />
@@ -175,6 +206,43 @@ export function VocabLibrary({
                 placeholder="你好"
                 className="min-h-[44px]"
               />
+            </div>
+            <div className="space-y-1.5">
+              <Label>分类 / หมวดหมู่</Label>
+              <div className="flex flex-wrap gap-2">
+                {[...allCats, { key: "__new", zh: "+ 新建分类", th: "สร้างหมวดใหม่" }].map((c) => (
+                  <button
+                    key={c.key}
+                    type="button"
+                    onClick={() => setCategory(c.key)}
+                    className={`min-h-[36px] rounded-full border px-3 text-xs font-medium transition-colors ${
+                      category === c.key
+                        ? "border-primary bg-primary/15 text-primary"
+                        : "border-border bg-card text-muted-foreground"
+                    }`}
+                  >
+                    {c.zh} <span className="font-thai opacity-70">{c.th}</span>
+                  </button>
+                ))}
+              </div>
+              {category === "__new" && (
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <Input
+                    value={newZh}
+                    onChange={(e) => setNewZh(e.target.value)}
+                    placeholder="中文名 如：工作"
+                    aria-label="新分类中文名 / ชื่อหมวดภาษาจีน"
+                    className="min-h-[44px]"
+                  />
+                  <Input
+                    value={newTh}
+                    onChange={(e) => setNewTh(e.target.value)}
+                    placeholder="ชื่อไทย เช่น งาน"
+                    aria-label="新分类泰文名 / ชื่อหมวดภาษาไทย"
+                    className="font-thai min-h-[44px]"
+                  />
+                </div>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label>难度 / ระดับความยาก</Label>

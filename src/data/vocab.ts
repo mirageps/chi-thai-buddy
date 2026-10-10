@@ -94,7 +94,16 @@ export const VOCAB: VocabWord[] = [
   { id: "w-mak", thai: "มาก", pron: "mâak", zh: "很、非常", difficulty: "basic", category: "daily" },
 ];
 
+export type VocabCategory = { key: string; zh: string; th: string };
+
+let customCats: VocabCategory[] = [];
+/** 由 vocab-store 同步用户自建分类 */
+export function registerCustomCategories(list: VocabCategory[]) {
+  customCats = list;
+}
+
 export function categoryLabel(key: string): { zh: string; th: string } {
-  const found = VOCAB_CATEGORIES.find((c) => c.key === key);
+  const found =
+    VOCAB_CATEGORIES.find((c) => c.key === key) ?? customCats.find((c) => c.key === key);
   return found ? { zh: found.zh, th: found.th } : { zh: "我的单词", th: "คำของฉัน" };
 }
