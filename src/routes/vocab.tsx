@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Plus } from "lucide-react";
+import { AddWordDialog } from "@/components/vocab/AddWordDialog";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { LearningCategoryCard } from "@/components/layout/LearningCategoryCard";
 import { VocabLearn } from "@/components/vocab/VocabLearn";
@@ -205,6 +206,22 @@ function VocabPage() {
           {tab === "review" && <VocabReview words={filtered} progress={s.progress} onMark={s.mark} />}
         </>
       )}
+
+      <button
+        type="button"
+        onClick={() => setAddOpen(true)}
+        aria-label="添加单词 / เพิ่มคำศัพท์"
+        className="fixed bottom-24 right-4 z-40 grid h-14 w-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform active:scale-95 sm:right-6"
+      >
+        <Plus className="h-6 w-6" />
+      </button>
+      <AddWordDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        onAdd={s.addWord}
+        customCategories={s.categories}
+        defaultCategory={current?.key}
+      />
     </AppLayout>
   );
 }
