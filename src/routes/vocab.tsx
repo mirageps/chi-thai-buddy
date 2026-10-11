@@ -37,23 +37,49 @@ const COLORS = ["--consonant", "--vowel", "--final", "--tone"];
 function VocabPage() {
   const [tab, setTab] = useState<Tab>("learn");
   const [cat, setCat] = useState<string | null>(null);
+  const [level, setLevel] = useState<"root" | "choose" | "cats">("root");
+  const [addOpen, setAddOpen] = useState(false);
   const s = useVocabStore();
 
   const cats: (VocabCategory & { desc: string })[] = useMemo(
     () => [
-      { key: "all", zh: "全部单词", th: "คำศัพท์ทั้งหมด", desc: "所有分类的单词 · ทุกหมวดหมู่" },
       ...VOCAB_CATEGORIES.map((c) => ({ ...c, desc: "常用词汇 · คำศัพท์ใช้บ่อย" })),
       ...s.categories.map((c) => ({ ...c, desc: "自建分类 · หมวดที่สร้างเอง" })),
       { key: "mine", zh: "我的单词", th: "คำของฉัน", desc: "未分类的自建单词 · คำที่เพิ่มเอง" },
     ],
     [s.categories],
   );
+  const allCat = { key: "all", zh: "全部单词", th: "คำศัพท์ทั้งหมด", desc: "" };
 
   const filtered = useMemo(
     () => (!cat || cat === "all" ? s.words : s.words.filter((w) => w.category === cat)),
     [s.words, cat],
   );
-  const current = cats.find((c) => c.key === cat);
+  const current = cat === "all" ? allCat : cats.find((c) => c.key === cat);
+  const masteredAll = s.masteredCount;
+
+  const open = (key: string) => {
+    setCat(key);
+    setTab("learn");
+    window.scrollTo({ top: 0 });
+  };
+
+  const BackBar = ({ onBack, title, sub }: { onBack: () => void; title: string; sub: string }) => (
+    <div className="mb-3 flex items-center gap-2">
+      <button
+        type="button"
+        onClick={onBack}
+        aria-label="返回 / ย้อนกลับ"
+        className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card"
+      >
+        <ChevronLeft className="h-5 w-5" />
+      </button>
+      <div>
+        <div className="font-semibold">{title}</div>
+        <div className="font-thai text-xs text-muted-foreground">{sub}</div>
+      </div>
+    </div>
+  );
 
   return (
     <AppLayout
@@ -68,57 +94,81 @@ function VocabPage() {
         </>
       }
     >
-      {!current ? (
+      {!current && level === "root" && (
         <div className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            选择分类开始学习 · <span className="font-thai">เลือกหมวดที่ต้องการเรียน</span>
+            选择学习内容 · <span className="font-thai">เลือกหัวข้อที่ต้องการเรียน</span>
           </p>
+          <button type="button" className="block w-full text-left" onClick={() => setLevel("choose")}>
+            <LearningCategoryCard
+              zh="单词"
+              th="คำศัพท์"
+              desc={`全部词汇与分类学习 · 已掌握 ${masteredAll}/${s.words.length}`}
+              colorVar="--vowel"
+              stat={String(s.words.length)}
+              emphasis
+            />
+          </button>
+        </div>
+      )}
+
+      {!current && level === "choose" && (
+        <div className="space-y-3">
+          <BackBar onBack={() => setLevel("root")} title="单词" sub={`คำศัพท์ · ${s.words.length} คำ`} />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button type="button" className="text-left" onClick={() => open("all")}>
+              <LearningCategoryCard
+                zh="全部单词"
+                th="เรียนคำศัพท์ทั้งหมด"
+                desc={`所有分类混合学习 · 已掌握 ${masteredAll}/${s.words.length}`}
+                colorVar="--consonant"
+                stat={String(s.words.length)}
+              />
+            </button>
+            <button type="button" className="text-left" onClick={() => setLevel("cats")}>
+              <LearningCategoryCard
+                zh="按分类学习"
+                th="เลือกเรียนตามหมวดหมู่"
+                desc="选择一个分类专注学习 · เลือกหมวดที่สนใจ"
+                colorVar="--final"
+                stat={String(cats.length)}
+              />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!current && level === "cats" && (
+        <div className="space-y-3">
+          <BackBar onBack={() => setLevel("choose")} title="按分类学习" sub="เลือกเรียนตามหมวดหมู่" />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {cats.map((c, i) => {
-              const list = c.key === "all" ? s.words : s.words.filter((w) => w.category === c.key);
+              const list = s.words.filter((w) => w.category === c.key);
               const done = list.filter((w) => s.progress[w.id]?.mastered).length;
               return (
-                <button
-                  key={c.key}
-                  type="button"
-                  className="text-left"
-                  onClick={() => {
-                    setCat(c.key);
-                    setTab("learn");
-                    window.scrollTo({ top: 0 });
-                  }}
-                >
+                <button key={c.key} type="button" className="text-left" onClick={() => open(c.key)}>
                   <LearningCategoryCard
                     zh={c.zh}
                     th={c.th}
                     desc={`${c.desc} · 已掌握 ${done}/${list.length}`}
                     colorVar={COLORS[i % COLORS.length]}
                     stat={String(list.length)}
-                    emphasis={c.key === "all"}
                   />
                 </button>
               );
             })}
           </div>
         </div>
-      ) : (
+      )}
+
+      {current && (
         <>
-          <div className="mb-3 flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setCat(null)}
-              aria-label="返回分类 / กลับไปหมวดหมู่"
-              className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <div>
-              <div className="font-semibold">{current.zh}</div>
-              <div className="font-thai text-xs text-muted-foreground">
-                {current.th} · {filtered.length} คำ
-              </div>
-            </div>
-          </div>
+          <BackBar
+            onBack={() => setCat(null)}
+            title={current.zh}
+            sub={`${current.th} · ${filtered.length} คำ`}
+          />
+
 
           <div className="mb-5 grid grid-cols-4 gap-1 rounded-2xl border border-border bg-card p-1">
             {TABS.map((t) => (
